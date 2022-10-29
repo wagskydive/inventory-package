@@ -1,0 +1,12 @@
+{
+    "name": "com.cutawayTV.inventorypackage",
+    "version": "0.1",
+    "displayName": "Cutaway TV Inventory Package",
+    "description": "Cutaway TV Inventory Package is a reusable module for inventory and crafting and character logic.",
+    "unity": "2019.4",
+    "author": {
+        "name": "wagskydive",
+        "email": "wagskydive@gmail.com",
+        "url": "https://github.com/wagskydive"
+    }
+}
