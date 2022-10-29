@@ -129,7 +129,7 @@ namespace UnitTesting
 
 
         [Test]
-        public void TestIfItemAmountCanBeRemovedFromInventory()
+        public void TestIfSlotCanBePickedCanBeRemovedFromInventory()
         {
             int testSize = 5;
             Inventory inventory = InventoryBuilder.CreateInventory(testSize);
@@ -139,13 +139,15 @@ namespace UnitTesting
             ItemAmount lookupIfPresent = LookupItemAmount(inventory, testItemAmount);
             Assert.AreEqual(testItemAmount, lookupIfPresent);
 
-            InventoryHandler.RemoveSlotFromInventory(testItemAmount, inventory);
+
+            ItemAmount pickup;
+            InventoryHandler.PickSlotFromInventory(0, inventory, out pickup);
             ItemAmount lookupIfEmpty = LookupItemAmount(inventory, testItemAmount);
 
 
-            UnityEngine.Debug.Log(TestDataFormatter.ToSentence(GetCurrentMethodName())+": expected: " + "not found"+  " " + 0 +" actual: " + lookupIfEmpty.Item.TypeName + " " + lookupIfEmpty.Amount);
+            UnityEngine.Debug.Log(TestDataFormatter.ToSentence(GetCurrentMethodName())+": expected: " + ItemType.Empty().TypeName+  " " + 0 +" actual: " + lookupIfEmpty.Item.TypeName + " " + lookupIfEmpty.Amount);
 
-            Assert.AreEqual("not found",lookupIfEmpty.Item.TypeName);
+            Assert.AreEqual(ItemType.Empty().TypeName,lookupIfEmpty.Item.TypeName);
             Assert.AreEqual(0,lookupIfEmpty.Amount);
 
         }
@@ -199,9 +201,10 @@ namespace UnitTesting
             Assert.AreEqual(testItemAmount, lookupIfPresent);
 
 
-            ItemAmount testItemAmountToRemove = new ItemAmount(testItemType, 5);
 
-            InventoryHandler.RemoveFromInventory(testItemAmountToRemove, inventory);
+
+            ItemAmount picked;
+            InventoryHandler.PickFromSlot(0,5, inventory, out picked);
             
             int amountLeft = InventoryHandler.GetTotalAmountOfItem(testItemType, inventory);
 
@@ -232,7 +235,7 @@ namespace UnitTesting
                 }
             }
 
-            return new ItemAmount(new ItemType("not found", 0), 0);
+            return new ItemAmount(ItemType.Empty(),0);
         }
     }
 }

@@ -60,18 +60,26 @@ namespace InventoryAndCharacterLogic
             return -1;
         }
 
-        public static void RemoveSlotFromInventory(ItemAmount itemAmount, Inventory inventory)
+        public static void PickSlotFromInventory(int slotIndex, Inventory inventory, out ItemAmount picked)
         {  
-            if(inventory.Slots.Contains(itemAmount))
+            picked = new ItemAmount(inventory.Slots[slotIndex].Item,inventory.Slots[slotIndex].Amount);
+            inventory.RemoveFromSlot(slotIndex);        
+
+        }
+
+        public static void PickFromSlot(int slotIndex, int amount, Inventory inventory, out ItemAmount picked)
+        {
+            if(inventory.Slots[slotIndex].Amount >= amount)
             {
-                for(int i = 0; i < inventory.Slots.Length; i++)
-                {
-                    if(inventory.Slots[i] == itemAmount)
-                    {
-                        inventory.RemoveFromSlot(i);                       
-                    }
-                }
+                picked = new ItemAmount(inventory.Slots[slotIndex].Item,amount);
+                ItemAmount amountLeft;
+                inventory.Slots[slotIndex].RemoveAmount(amount, out amountLeft);
             }
+            else
+            {
+                picked = new ItemAmount(ItemType.Empty(),0);
+            }
+
         }
 
         public static int[] GetSlotsWithItemType(ItemType type, Inventory inventory)

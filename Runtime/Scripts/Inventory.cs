@@ -36,7 +36,7 @@ namespace InventoryAndCharacterLogic
 
         internal void RemoveFromSlot(int i)
         {
-            Slots[i] = null;
+            Slots[i] = new ItemAmount(ItemType.Empty(),0);
         }
     }
 
