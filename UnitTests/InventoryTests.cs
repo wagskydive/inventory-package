@@ -1,5 +1,5 @@
 using NUnit.Framework;
-using InventoryAndCharacterLogic;
+using InventoryPackage;
 using UnityEngine;
 using System;
 using System.Diagnostics;

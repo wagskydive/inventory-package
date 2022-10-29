@@ -1,6 +1,6 @@
 using System;
 using NUnit.Framework;
-using InventoryAndCharacterLogic;
+using InventoryPackage;
 using UnityEngine;
 
 

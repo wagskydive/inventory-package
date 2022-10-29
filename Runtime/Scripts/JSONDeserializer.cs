@@ -2,7 +2,7 @@ using SimpleJSON;
 using System.Collections.Generic;
 using System.IO;
 
-namespace InventoryAndCharacterLogic
+namespace InventoryPackage
 {
     public static class JSONDeserializer
     {

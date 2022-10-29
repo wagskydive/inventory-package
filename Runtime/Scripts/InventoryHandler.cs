@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace InventoryAndCharacterLogic
+namespace InventoryPackage
 {
     public static class InventoryHandler
     {

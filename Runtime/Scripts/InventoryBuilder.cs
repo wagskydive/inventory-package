@@ -1,6 +1,6 @@
 
 
-namespace InventoryAndCharacterLogic
+namespace InventoryPackage
 {
 
     public static class InventoryBuilder

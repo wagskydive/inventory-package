@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace InventoryAndCharacterLogic
+namespace InventoryPackage
 {
 
     public class ItemType
