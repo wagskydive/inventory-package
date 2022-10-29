@@ -9,11 +9,25 @@ namespace InventoryAndCharacterLogic
         internal Inventory(int availableSlots)
         {
             Slots = new ItemAmount[availableSlots];
+            Validate();
         }
 
-        internal void AddInSlot(ItemAmount itemAmount, int slotIndex) 
+        private void Validate()
         {
-            if(Slots[slotIndex] == null)
+            for (int i = 0; i < Slots.Length; i++)
+            {
+                if (Slots[i] == null)
+                {
+                    Slots[i] = new ItemAmount(ItemType.Empty(),0);
+                }
+            }
+        }
+
+
+
+        internal void AddInEmptySlot(ItemAmount itemAmount, int slotIndex) 
+        {
+            if(Slots[slotIndex].Item.TypeName == ItemType.Empty().TypeName)
             {
                 Slots[slotIndex] = itemAmount;
             }

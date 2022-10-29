@@ -1,0 +1,7 @@
+        [Test]
+        public void TestTEMPLATE()
+        {
+            UnityEngine.Debug.Log(TestDataFormatter.ToSentence(GetCurrentMethodName())+": expected: "+0+" actual: "+1);
+
+            Assert.IsTrue(false);
+        }

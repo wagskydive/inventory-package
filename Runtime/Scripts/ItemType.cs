@@ -12,5 +12,10 @@ namespace InventoryAndCharacterLogic
             TypeName = typeName;
             StackSize = stackSize;
         }
+
+        public static ItemType Empty()
+        {
+            return new ItemType("Empty", 1);
+        }
     }
 }

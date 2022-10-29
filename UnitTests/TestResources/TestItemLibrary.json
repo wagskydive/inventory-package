@@ -1,0 +1,14 @@
+{
+    "LibraryName": "Test Library",
+    "ItemTypes":
+    [
+        {
+            "name": "apple",
+            "stack size": 100           
+        },
+        {
+            "name": "banana",
+            "stack size": 100    
+        }
+    ]
+}

@@ -12,7 +12,7 @@ namespace UnitTesting
     internal class JSONTests
     {
 
-        string testFolerPath = "Assets/Resources";
+        string testFolerPath = "Assets/inventory-package/UnitTests/TestResources";
         [Test]
         public void TestReadFromResources()
         {
