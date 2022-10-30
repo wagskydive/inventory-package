@@ -31,19 +31,23 @@ namespace InventoryPackage
 
         public void AddAmount(int amount, out ItemAmount AmountLeft)
         {
-            AmountLeft = new ItemAmount(ItemType.Empty(),0);
+            AmountLeft = Empty();
             int newAmount = Amount + amount;
             if(newAmount > Item.StackSize)
-            {
-                
+            {                
                 AmountLeft = new ItemAmount(Item, amount-Amount);
-
                 newAmount = Item.StackSize;
             }
-            Amount = newAmount;
-            
+            Amount = newAmount;            
+        }
+
+        public static ItemAmount Empty()
+        {
+            return new ItemAmount(ItemType.Empty(),0);
         }
     }
+        
+
 
 
 }

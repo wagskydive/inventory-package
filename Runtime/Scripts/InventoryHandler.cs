@@ -9,16 +9,16 @@ namespace InventoryPackage
         public static void AddToInventory(ItemAmount amountLeft, Inventory inventory)
         {
             //ItemAmount amountLeft = new ItemAmount(itemAmount.Item,itemAmount.Amount);
-            if(HasAmountOfItem(amountLeft.Item,1,inventory))
+            if (HasAmountOfItem(amountLeft.Item, 1, inventory))
             {
-                int[] slotsWithItemType = GetSlotsWithItemType(amountLeft.Item,inventory);
-                
-                for(int i = 0; i < slotsWithItemType.Length;i++)
+                int[] slotsWithItemType = GetSlotsWithItemType(amountLeft.Item, inventory);
+
+                for (int i = 0; i < slotsWithItemType.Length; i++)
                 {
-                    
+
                     inventory.Slots[slotsWithItemType[i]].AddAmount(amountLeft.Amount, out amountLeft);
-                    if(amountLeft.Item.TypeName == ItemType.Empty().TypeName)
-                    {                       
+                    if (amountLeft.Item.TypeName == ItemType.Empty().TypeName)
+                    {
                         break;
                     }
 
@@ -26,11 +26,11 @@ namespace InventoryPackage
             }
             else
             {
-                if(HasEmptySlot(inventory))
+                if (HasEmptySlot(inventory))
                 {
-                    inventory.AddInEmptySlot(amountLeft,GetNextEmptySlot(inventory));
-                }             
-            }           
+                    inventory.AddInEmptySlot(amountLeft, GetNextEmptySlot(inventory));
+                }
+            }
         }
 
 
@@ -38,46 +38,46 @@ namespace InventoryPackage
         public static bool HasEmptySlot(Inventory inventory)
         {
 
-            for(int i = 0; i < inventory.Slots.Length; i++) 
+            for (int i = 0; i < inventory.Slots.Length; i++)
             {
-                if(inventory.Slots[i].Item.TypeName == ItemType.Empty().TypeName)
+                if (inventory.Slots[i].Item.TypeName == ItemType.Empty().TypeName)
                 {
                     return true;
-                }   
+                }
             }
             return false;
         }
 
         public static int GetNextEmptySlot(Inventory inventory)
         {
-            for(int i = 0; i < inventory.Slots.Length; i++) 
+            for (int i = 0; i < inventory.Slots.Length; i++)
             {
-                if(inventory.Slots[i].Item.TypeName == ItemType.Empty().TypeName)
+                if (inventory.Slots[i].Item.TypeName == ItemType.Empty().TypeName)
                 {
                     return i;
-                }   
+                }
             }
             return -1;
         }
 
         public static void PickSlotFromInventory(int slotIndex, Inventory inventory, out ItemAmount picked)
-        {  
-            picked = new ItemAmount(inventory.Slots[slotIndex].Item,inventory.Slots[slotIndex].Amount);
-            inventory.RemoveFromSlot(slotIndex);        
+        {
+            picked = new ItemAmount(inventory.Slots[slotIndex].Item, inventory.Slots[slotIndex].Amount);
+            inventory.RemoveFromSlot(slotIndex);
 
         }
 
         public static void PickFromSlot(int slotIndex, int amount, Inventory inventory, out ItemAmount picked)
         {
-            if(inventory.Slots[slotIndex].Amount >= amount)
+            if (inventory.Slots[slotIndex].Amount >= amount)
             {
-                picked = new ItemAmount(inventory.Slots[slotIndex].Item,amount);
+                picked = new ItemAmount(inventory.Slots[slotIndex].Item, amount);
                 ItemAmount amountLeft;
                 inventory.Slots[slotIndex].RemoveAmount(amount, out amountLeft);
             }
             else
             {
-                picked = new ItemAmount(ItemType.Empty(),0);
+                picked = new ItemAmount(ItemType.Empty(), 0);
             }
 
         }
@@ -85,9 +85,9 @@ namespace InventoryPackage
         public static int[] GetSlotsWithItemType(ItemType type, Inventory inventory)
         {
             List<int> slotsWithItemType = new List<int>();
-            for(int i = 0; i < inventory.Slots.Length; i++)                
+            for (int i = 0; i < inventory.Slots.Length; i++)
             {
-                if(inventory.Slots[i].Item == type)
+                if (inventory.Slots[i].Item == type)
                 {
                     slotsWithItemType.Add(i);
                 }
@@ -100,29 +100,29 @@ namespace InventoryPackage
 
         public static void RemoveFromInventory(ItemAmount itemAmount, Inventory inventory)
         {
-            if(GetTotalAmountOfItem(itemAmount.Item,inventory)>=itemAmount.Amount)
+            if (GetTotalAmountOfItem(itemAmount.Item, inventory) >= itemAmount.Amount)
             {
-                
+
             }
         }
 
         public static int GetTotalAmountOfItem(ItemType itemType, Inventory inventory)
         {
             int totalAmount = 0;
-            foreach(ItemAmount itemAmount in inventory.Slots)
+            foreach (ItemAmount itemAmount in inventory.Slots)
             {
-                if(itemAmount.Item == itemType)
+                if (itemAmount.Item == itemType)
                 {
                     totalAmount += itemAmount.Amount;
                 }
             }
-            return totalAmount;           
+            return totalAmount;
         }
 
         public static bool HasAmountOfItem(ItemType itemType, int amount, Inventory inventory)
         {
-            
-            if(GetTotalAmountOfItem(itemType, inventory) >= amount)
+
+            if (GetTotalAmountOfItem(itemType, inventory) >= amount)
             {
                 return true;
             }
@@ -135,12 +135,12 @@ namespace InventoryPackage
         public static string[] LibraryNames(ItemLibrary library)
         {
             List<string> libraryNames = new List<string>();
-            foreach(var item in library.AllItemTypes)
+            foreach (var item in library.AllItemTypes)
             {
                 libraryNames.Add(item.TypeName);
             }
             return libraryNames.ToArray();
-            
+
         }
     }
 }

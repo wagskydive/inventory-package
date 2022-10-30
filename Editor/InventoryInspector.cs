@@ -1,18 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using UnityEngine.UIElements;
+using UnityEditor.UIElements;
+using UnityEditor;
+using InventoryPackage;
 
-public class InventoryInspector : MonoBehaviour
+[CustomEditor(typeof(ItemLibrary), true)]
+public class InventoryInspector : Editor
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

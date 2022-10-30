@@ -1,7 +1,5 @@
 namespace InventoryPackage
-{
-    
-
+{ 
     public class Inventory
     {
         public ItemAmount[] Slots{get; private set;}
