@@ -1,6 +1,5 @@
 using NUnit.Framework;
 using InventoryPackage;
-using UnityEngine;
 using System;
 using System.Diagnostics;
 
@@ -17,13 +16,6 @@ namespace UnitTesting
             return stackFrame.GetMethod().Name;
         }
 
-        [Test]
-        public void TestInventoryPackageManagerCreatesLibrary()
-        {
-            UnityEngine.Debug.Log(TestDataFormatter.ToSentence(GetCurrentMethodName())+": expected: "+0+" actual: "+1);
-
-            Assert.IsTrue(false);
-        }
 
         [Test]
         public void TestIfInventoryCanBeCreatedWithSize()
