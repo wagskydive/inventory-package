@@ -131,5 +131,16 @@ namespace InventoryPackage
                 return false;
             }
         }
+
+        public static string[] LibraryNames(ItemLibrary library)
+        {
+            List<string> libraryNames = new List<string>();
+            foreach(var item in library.AllItemTypes)
+            {
+                libraryNames.Add(item.TypeName);
+            }
+            return libraryNames.ToArray();
+            
+        }
     }
 }

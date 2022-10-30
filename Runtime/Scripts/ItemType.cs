@@ -1,16 +1,21 @@
 ﻿using System;
+using UnityEngine;
 
 namespace InventoryPackage
 {
-
+    [Serializable]
     public class ItemType
     {
-        public string TypeName {get; private set;}
-        public int StackSize {get; private set;}
+        public string TypeName {get => typeName; }
+        [SerializeField] private readonly string typeName;
+
+        public int StackSize {get => stackSize;}
+        [SerializeField] private readonly int stackSize;
+        
         public ItemType(string typeName, int stackSize)
         {
-            TypeName = typeName;
-            StackSize = stackSize;
+            this.typeName = typeName;
+            this.stackSize = stackSize;
         }
 
         public static ItemType Empty()

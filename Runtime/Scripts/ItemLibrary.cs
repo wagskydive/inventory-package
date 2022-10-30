@@ -1,15 +1,25 @@
+using System;
+using UnityEngine;
+
 namespace InventoryPackage
 {
+    [Serializable]
     public class ItemLibrary
     {
-        public string LibraryName { get; private set; }
+        [SerializeField]
+        private readonly string libraryName;
+        public string LibraryName { get=>libraryName; }
 
-        public ItemType[] AllItemTypes {get;private set;}
 
-        public ItemLibrary(string LibraryName,ItemType[] allItemTypes)
+        [SerializeField]
+        private readonly ItemType[] allItemTypes;
+
+        public ItemType[] AllItemTypes {get => allItemTypes;}
+
+        public ItemLibrary(string libraryName,ItemType[] allItemTypes)
         {
-            this.LibraryName = LibraryName;
-            AllItemTypes = allItemTypes;            
+            this.libraryName = libraryName;
+            this.allItemTypes = allItemTypes;            
         }
 
         public Inventory CreativeMenu{get => MakeCreativeMenu();}

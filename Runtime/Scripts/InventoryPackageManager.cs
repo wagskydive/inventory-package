@@ -3,20 +3,26 @@ using System.Collections.Generic;
 using UnityEngine;
 using InventoryPackage;
 
+namespace InventoryPackage
+{
 public class InventoryPackageManager : MonoBehaviour
 {
     [SerializeField]
-    private string LibraryPath;
+    private string libraryPath;
 
     [SerializeField]
-    private string RecipesPath;
+    private string recipesPath;
+    
+    [SerializeField]
+    private string[] LibraryNames;
 
-    public ItemLibrary library{get; private set;}
+    [SerializeField]
+    public ItemLibrary library;
 
     private void Awake() 
     {
-        library = JSONDeserializer.CreateLibraryFromJSON(LibraryPath);
+        library = JSONDeserializer.CreateLibraryFromJSON(libraryPath);
+        LibraryNames = InventoryHandler.LibraryNames(library);
     }
-
-    
+}
 }
