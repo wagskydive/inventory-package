@@ -29,13 +29,26 @@ namespace InventoryPackage
             {
                 Slots[slotIndex] = itemAmount;
             }
-
         }
 
         internal void RemoveFromSlot(int i)
         {
             Slots[i] = new ItemAmount(ItemType.Empty(),0);
         }
+
+        public string[] GetContentInfo()
+        {
+            string[] info = new string[Slots.Length];
+            for (int i = 0; i < info.Length; i++)
+            {
+                string itemAmountInfo = Slots[i].Item.TypeName+ " "+Slots[i].Amount;
+                info[i] = itemAmountInfo;
+            }
+            return info;
+
+        }
+
+       
     }
 
 

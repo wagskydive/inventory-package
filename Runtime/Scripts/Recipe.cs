@@ -6,17 +6,20 @@ namespace InventoryPackage
 {
     public class Recipe
     {
-        ItemAmount[] ingredients;
+        public string[] Ingredients { get => ingredients.GetContentInfo();}
+        Inventory ingredients;
+        ItemAmount result;
         float craftingTime;
-        int craftingTier;
+        ItemType tool;
+        
 
-        ItemAmount[] result;
-
-        internal Recipe(ItemAmount[] ingredients, float craftingTime, int craftingTier = 0)
+        internal Recipe(Inventory ingredients, float craftingTime, ItemType tool, ItemAmount result)
         {
             this.ingredients = ingredients;
             this.craftingTime = craftingTime;
-            this.craftingTier = craftingTier;           
+            this.tool = tool;
+            this.result = result;
         }
+
     }
 }

@@ -13,25 +13,20 @@ namespace InventoryPackage
         private readonly ItemType[] allItemTypes;
         public ItemType[] AllItemTypes {get => allItemTypes;}
 
-        internal ItemLibrary(string libraryName,ItemType[] allItemTypes)
+        [SerializeField]
+        private readonly Recipe[] allRecipes;
+        public Recipe[] AllRecipes {get => allRecipes;}
+
+
+        internal ItemLibrary(string libraryName, ItemType[] allItemTypes, Recipe[] allRecipes = null)
         {
             this.libraryName = libraryName;
-            this.allItemTypes = allItemTypes;            
-        }
-    }
-    public static class LibraryHandler
-    {
-        //public static Inventory CreativeMenu{get => MakeCreativeMenu();}
+            this.allItemTypes = allItemTypes;
 
-        public static Inventory MakeCreativeMenu(ItemLibrary library)
-        {          
-            Inventory inventory = InventoryBuilder.CreateInventory(library.AllItemTypes.Length);
-            for (int i = 0; i < library.AllItemTypes.Length; i++)
+            if(allRecipes != null)
             {
-                InventoryHandler.AddToInventory(new ItemAmount(library.AllItemTypes[i], library.AllItemTypes[i].StackSize), inventory);
+                this.allRecipes = allRecipes;
             }
-            return inventory;
         }
-
     }
 }

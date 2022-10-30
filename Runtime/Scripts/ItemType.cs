@@ -9,19 +9,21 @@ namespace InventoryPackage
         public string TypeName {get => typeName; }
         [SerializeField] private readonly string typeName;
 
+        public string Description {get =>  description; }
+        [SerializeField] private readonly string  description;
+
         public int StackSize {get => stackSize;}
         [SerializeField] private readonly int stackSize;
 
-        public int FactoryTier {get => FactoryTier;}
-        [SerializeField] private readonly int factoryTier;
 
-
-        public ItemType(string typeName, int stackSize, int factoryTier = 0)
+        public ItemType(string typeName, int stackSize = 100, string discription = "no description written.")
         {
             this.typeName = typeName;
+            this.description = discription;
             this.stackSize = stackSize;
-            this.factoryTier = factoryTier;
         }
+
+
 
         public static ItemType Empty()
         {
