@@ -29,21 +29,27 @@ public class RecipeEditorWindow : EditorWindow
 
         if (currentRecipe != null)
         {
-
+            GUILayout.BeginHorizontal();
+            GUILayout.Label(currentRecipe.ResultType);
             int selection = GUILayout.SelectionGrid(-1, currentRecipe.Ingredients, 1);
             if (selection != -1)
             {
                 Debug.Log("Grid Selection: " + selection);
             }
+            GUILayout.EndHorizontal();
 
+            GUILayout.BeginHorizontal();
             if (GUILayout.Button("Add Ingredient"))
             {
-                int selectionOfNewIngredient = GUILayout.SelectionGrid(-1, LibraryHandler.LibraryNames(library), 1);
-                if (selectionOfNewIngredient != -1)
-                {
-                    Debug.Log("Grid Selection: " + selectionOfNewIngredient);
-                }
+
             }
+
+
+            if (GUILayout.Button("Remove Ingredient"))
+            {
+
+            }
+            GUILayout.EndHorizontal();
 
         }
 
