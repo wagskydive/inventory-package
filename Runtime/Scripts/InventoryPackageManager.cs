@@ -14,15 +14,17 @@ public class InventoryPackageManager : MonoBehaviour
     private string recipesPath;
     
     [SerializeField]
-    private string[] LibraryNames;
+    private string[] libraryNames;
+
+    public string[] LibraryNames{get => libraryNames;}
 
     [SerializeField]
     public ItemLibrary library;
 
-    private void Awake() 
+    public void CreateLibrary() 
     {
         library = JSONDeserializer.CreateLibraryFromJSON(libraryPath);
-        LibraryNames = InventoryHandler.LibraryNames(library);
+        libraryNames = InventoryHandler.LibraryNames(library);
     }
 }
 }
