@@ -8,7 +8,6 @@ namespace InventoryPackage
     {
         public static void AddToInventory(ItemAmount amountLeft, Inventory inventory)
         {
-            //ItemAmount amountLeft = new ItemAmount(itemAmount.Item,itemAmount.Amount);
             if (HasAmountOfItem(amountLeft.Item, 1, inventory))
             {
                 int[] slotsWithItemType = GetSlotsWithItemType(amountLeft.Item, inventory);
@@ -21,7 +20,6 @@ namespace InventoryPackage
                     {
                         break;
                     }
-
                 }
             }
             else
@@ -132,15 +130,5 @@ namespace InventoryPackage
             }
         }
 
-        public static string[] LibraryNames(ItemLibrary library)
-        {
-            List<string> libraryNames = new List<string>();
-            foreach (var item in library.AllItemTypes)
-            {
-                libraryNames.Add(item.TypeName);
-            }
-            return libraryNames.ToArray();
-
-        }
     }
 }

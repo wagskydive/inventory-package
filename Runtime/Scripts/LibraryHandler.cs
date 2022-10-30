@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace InventoryPackage
 {
     public static class LibraryHandler
@@ -28,6 +30,31 @@ namespace InventoryPackage
             }
             return ItemType.Empty();
         }
+
+        
+        public static string[] LibraryNames(ItemLibrary library)
+        {
+            List<string> libraryNames = new List<string>();
+            foreach (var item in library.AllItemTypes)
+            {
+                libraryNames.Add(item.TypeName);
+            }
+            return libraryNames.ToArray();
+
+        }
+
+        public static string[] RecipesResultTypes(ItemLibrary library)
+        {
+            List<string> recipes = new List<string>();
+            foreach (var recipe in library.AllRecipes)
+            {
+                recipes.Add(recipe.ResultType);
+            }
+
+            return recipes.ToArray();
+        }
+
+        
 
     }
 }

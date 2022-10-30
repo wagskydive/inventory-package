@@ -14,19 +14,21 @@ namespace InventoryPackage
         public ItemType[] AllItemTypes {get => allItemTypes;}
 
         [SerializeField]
-        private readonly Recipe[] allRecipes;
+        private Recipe[] allRecipes;
         public Recipe[] AllRecipes {get => allRecipes;}
 
 
-        internal ItemLibrary(string libraryName, ItemType[] allItemTypes, Recipe[] allRecipes = null)
+        internal ItemLibrary(string libraryName, ItemType[] allItemTypes)
         {
             this.libraryName = libraryName;
             this.allItemTypes = allItemTypes;
-
-            if(allRecipes != null)
-            {
-                this.allRecipes = allRecipes;
-            }
         }
+        
+        internal void ReplaceRecipes(Recipe[] recipes)
+        {
+            this.allRecipes = recipes;
+        }
+
+        
     }
 }

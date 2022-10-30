@@ -7,6 +7,14 @@ namespace InventoryPackage
     public class Recipe
     {
         public string[] Ingredients { get => ingredients.GetContentInfo();}
+
+        public string ResultType { get => result.Item.TypeName;}
+
+        public string ToolType { get => tool.TypeName; }
+
+        public float  CraftingTime { get => craftingTime; }
+
+
         Inventory ingredients;
         ItemAmount result;
         float craftingTime;

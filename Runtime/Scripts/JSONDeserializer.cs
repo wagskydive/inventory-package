@@ -36,7 +36,12 @@ namespace InventoryPackage
             JSONObject json = JSONObject.Parse(ReadJSON(path)).AsObject;
             string libraryName = json["LibraryName"];
             ItemType[] itemTypes = ReadAllItemTypes(path);
-            return new ItemLibrary(libraryName, itemTypes);
+            ItemLibrary library = new ItemLibrary(libraryName, itemTypes);
+
+            Recipe[] allRecipes = ReadAllRecipes(path, library);
+
+            library.ReplaceRecipes(allRecipes);
+            return library;
         }
 
         public static Recipe ReadRecipe(JSONObject recipeJson, ItemLibrary library, string outputType)
