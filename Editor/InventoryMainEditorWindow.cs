@@ -44,7 +44,7 @@ public class InventoryMainEditorWindow : EditorWindow
 
     void OnGUI()
     {
-        GUILayout.Label("Inventroy Editor");
+        GUILayout.Label("Inventory Editor");
 
 
         if (library == null)
