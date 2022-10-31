@@ -5,16 +5,30 @@ namespace InventoryPackage
 {
     public static class PrefabToLibrary
     {
+        public static bool ValidatePrefab(GameObject prefab)
+        {
+
+            Transform[] libraryTransforms = prefab.transform.GetComponentsInChildren<Transform>();
+            Transform libraryTransform = null;
+            for (int i = 0; i <libraryTransforms.Length; i++)
+            {
+                string keyword = libraryTransforms[i].gameObject.name;
+                if (keyword.Contains(GlobalSettings.LibraryKeyword))
+                {
+                    libraryTransform = libraryTransforms[i];
+                }
+            }
+            return libraryTransform != null;
+        }
         public static ItemLibrary LibraryFromPrefab(GameObject prefab)
         {
-            string keywordString = "ItemLibrary";
 
             Transform[] libraryTransforms = prefab.transform.GetComponentsInChildren<Transform>();
             Transform libraryTransform = null;
             for (int i = 0; i < libraryTransforms.Length; i++)
             {
                 string keyword = libraryTransforms[i].gameObject.name.TrimEnd(' ');
-                if (keyword.Contains(keywordString))
+                if (keyword.Contains(GlobalSettings.LibraryKeyword))
                 {
                     libraryTransform = libraryTransforms[i];
                 }
@@ -28,7 +42,7 @@ namespace InventoryPackage
 
                 for (int i = 0; i < itemTransforms.Length; i++)
                 {
-                    if (itemTransforms[i].name != prefab.name && !itemTransforms[i].name.Contains(keywordString))
+                    if (itemTransforms[i].name != prefab.name && !itemTransforms[i].name.Contains(GlobalSettings.LibraryKeyword))
                     {
 
 

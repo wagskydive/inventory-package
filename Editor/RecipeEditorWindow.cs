@@ -55,9 +55,12 @@ public class RecipeEditorWindow : EditorWindow
 
         else
         {
-            this.Close();
-        }
 
+        }
+        if (GUILayout.Button("Add Recipe"))
+        {
+
+        }
 
     }
 

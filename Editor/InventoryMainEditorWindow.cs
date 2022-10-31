@@ -29,7 +29,7 @@ public class InventoryMainEditorWindow : EditorWindow
     {
         this.library = library;
         SetEditorIcons(library);
-        ResetGuiContent(library);
+
     }
 
     private void SetEditorIcons(ItemLibrary library)
@@ -41,75 +41,73 @@ public class InventoryMainEditorWindow : EditorWindow
         }
     }
 
-    private void ResetGuiContent(ItemLibrary library)
-    {
-        int amountOfItems = library.AllItemTypes.Length;
-        itemTypeGuiContents = new GUIContent[amountOfItems];
-
-
-        for (int i = 0; i < amountOfItems; i++)
-        {
-            itemTypeGuiContents[i] = new GUIContent(library.AllItemTypes[i].TypeName, library.AllItemTypes[i].TypeName);
-
-        }
-    }
 
     void OnGUI()
     {
         GUILayout.Label("Inventroy Editor");
 
-        GUILayout.BeginVertical();
+
         if (library == null)
         {
-            if (path == "" && GUILayout.Button(new GUIContent("Select Inventory Location", "select location to read and write inventory data files")))
+            GUILayout.BeginVertical();
+            GUILayout.Label("No Library Loaded");
+            if (GUILayout.Button(new GUIContent("Load inventory json", "select a json library file")))
             {
-                path = EditorUtility.OpenFolderPanel("Select Inventory Location", "", "inventory");
+                path = EditorUtility.OpenFilePanel("Select Inventory json", "", "json");
+                ResetLibrary(JSONDeserializer.CreateLibraryFromJSON(path));
+
             }
-            if (path != "")
+            GUILayout.Label("Or");
+            prefab = (GameObject)EditorGUILayout.ObjectField("Prefab", prefab, typeof(GameObject), false);
+            if (GUILayout.Button(new GUIContent("Read Library From Prefab", " Read library data from prefab file")))
             {
-                GUILayout.TextField(path);
-                if (File.Exists(path + "itemLibrary.json"))
+                if (prefab != null && PrefabToLibrary.ValidatePrefab(prefab))
                 {
-                    ResetLibrary(JSONDeserializer.CreateLibraryFromJSON(path));
-
+                    ResetLibrary(PrefabToLibrary.LibraryFromPrefab(prefab));
                 }
-                else
-                {
-                    prefab = (GameObject)EditorGUILayout.ObjectField("Prefab", prefab, typeof(GameObject), false);
-                    if (GUILayout.Button(new GUIContent("Read Library From Prefab", " Read library data from prefab file")))
-                    {
 
-                        ResetLibrary(PrefabToLibrary.LibraryFromPrefab(prefab));
 
-                    }
-                }
             }
+
+            GUILayout.EndVertical();
         }
-        GUILayout.EndVertical();
-
-
-
-
-
-
-
-
-
-
 
         if (library != null)
         {
+            GUILayout.BeginHorizontal();
+
             GUILayout.BeginVertical();
 
-            for (int i = 0; i < itemTypeGuiContents.Length; i++)
+            GUILayout.Label("Library " + library.LibraryName + " loaded");
+
+            for (int i = 0; i < library.AllItemTypes.Length; i++)
             {
-                GUILayout.BeginHorizontal();
-                GUIContent icon = new GUIContent(library.AllItemTypes[i].TypeName, library.AllItemTypes[i].Icon, library.AllItemTypes[i].TypeName);
+                //GUILayout.BeginHorizontal();
 
+                GUIContent icon = new GUIContent(library.AllItemTypes[i].Icon, library.AllItemTypes[i].TypeName);
+                if (GUILayout.Button(icon, GUILayout.Width(32), GUILayout.Height(32)))
+                {
 
-                GUILayout.EndHorizontal();
+                }
+
+                //GUILayout.EndHorizontal();
             }
             GUILayout.EndVertical();
+
+
+            GUILayout.BeginVertical();
+
+            if (GUILayout.Button(new GUIContent("Recipe Editor", "Open Recipe Editor")))
+            {
+                recipeEditorWindow = GetWindow<RecipeEditorWindow>("Recipe Editor");
+                recipeEditorWindow.SetLibrary(library);
+            }
+            GUILayout.EndVertical();
+
+
+
+            GUILayout.EndHorizontal();
+
 
 
 

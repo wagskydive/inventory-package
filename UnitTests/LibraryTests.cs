@@ -34,23 +34,27 @@ namespace UnitTesting
         public void TestIfPrefabItemLibraryCanBeFound()
         {
 
-            string keywordString = "ItemLibrary ";
+
             GameObject prefab = Resources.Load<GameObject>("ItemLibrary/ExampleLibrary") as GameObject;
 
             Transform[] libraryTransforms = prefab.transform.GetComponentsInChildren<Transform>();
             Transform libraryTransform = null;
+
+            bool found = false;
             for (int i = 0; i <libraryTransforms.Length; i++)
             {
                 string keyword = libraryTransforms[i].gameObject.name;
-                if (keyword.Contains(keywordString))
+                if (keyword.Contains(InventoryPackage.GlobalSettings.LibraryKeyword))
                 {
                     libraryTransform = libraryTransforms[i];
+                    found = true;
+                    break;
                 }
             }
 
-            UnityEngine.Debug.Log(TestDataFormatter.ToSentence(GetCurrentMethodName()) + ": expected: " + keywordString + " actual: " + libraryTransform.name);
+            UnityEngine.Debug.Log(TestDataFormatter.ToSentence(GetCurrentMethodName()) + ": expected: " + InventoryPackage.GlobalSettings.LibraryKeyword + " actual: " + libraryTransform.name);
 
-            Assert.AreEqual(keywordString, libraryTransform.name);
+            Assert.True(found);
         }
 
         [Test]
