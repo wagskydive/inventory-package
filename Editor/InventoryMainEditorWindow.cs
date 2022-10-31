@@ -16,6 +16,10 @@ public class InventoryMainEditorWindow : EditorWindow
 
     ItemLibrary library;
     RecipeEditorWindow recipeEditorWindow;
+    ItemTypeEditorWindow itemTypeEditorWindow;
+
+
+
 
     [MenuItem("Inventory Package/Inventory Editor")]
     static void ShowWindow()
@@ -30,6 +34,21 @@ public class InventoryMainEditorWindow : EditorWindow
         this.library = library;
         SetEditorIcons(library);
 
+
+    }
+
+    private GUIContent[] MakeLibraryButtons(ItemLibrary library)
+    {
+
+
+        GUIContent[] buttons = new GUIContent[library.AllItemTypes.Length];
+
+        for (int i = 0; i < library.AllItemTypes.Length; i++)
+        {
+            GUIContent buttonContent = new GUIContent(library.AllItemTypes[i].Icon, library.AllItemTypes[i].TypeName);
+            buttons[i] = buttonContent;
+        }
+        return buttons;
     }
 
     private void SetEditorIcons(ItemLibrary library)
@@ -37,7 +56,10 @@ public class InventoryMainEditorWindow : EditorWindow
         int amountOfItems = library.AllItemTypes.Length;
         for (int i = 0; i < amountOfItems; i++)
         {
-            //EditorGUIUtility.SetIconForObject(library.AllItemTypes[i], library.AllItemTypes[i].Icon);
+            if (library.AllItemTypes[i].Icon != null)
+            {
+                EditorGUIUtility.SetIconForObject(library.AllItemTypes[i], library.AllItemTypes[i].Icon);
+            }
         }
     }
 
@@ -80,17 +102,14 @@ public class InventoryMainEditorWindow : EditorWindow
 
             GUILayout.Label("Library " + library.LibraryName + " loaded");
 
-            for (int i = 0; i < library.AllItemTypes.Length; i++)
+            int selected = -1;
+            selected = GUILayout.SelectionGrid(selected, MakeLibraryButtons(library), 8,GUILayout.MaxWidth(250));
+
+            if(selected != -1)
             {
-                //GUILayout.BeginHorizontal();
-
-                GUIContent icon = new GUIContent(library.AllItemTypes[i].Icon, library.AllItemTypes[i].TypeName);
-                if (GUILayout.Button(icon, GUILayout.Width(32), GUILayout.Height(32)))
-                {
-
-                }
-
-                //GUILayout.EndHorizontal();
+                itemTypeEditorWindow = GetWindow<ItemTypeEditorWindow>("Item Type Editor");
+                itemTypeEditorWindow.SetItemType(library.AllItemTypes[selected]);
+                
             }
             GUILayout.EndVertical();
 
@@ -107,12 +126,6 @@ public class InventoryMainEditorWindow : EditorWindow
 
 
             GUILayout.EndHorizontal();
-
-
-
-
-
-
 
 
 

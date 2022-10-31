@@ -5,8 +5,8 @@ namespace InventoryPackage
 {
     public class ItemType : ScriptableObject, IItemType
     {
-        
-        
+
+
         public string TypeName { get => typeName; }
         [SerializeField] private string typeName;
 
@@ -31,9 +31,23 @@ namespace InventoryPackage
             return itemType;
         }
 
+
+
+        public static void SetTypeName(ItemType itemType, string typeName)
+        {
+            itemType.SetTypeName(typeName);
+        }
+
         internal void SetTypeName(string name)
         {
             this.typeName = name;
+        }
+
+
+
+        public static void SetDescription(ItemType itemType, string description)
+        {
+            itemType.SetDescription(description);
         }
 
         internal void SetDescription(string description)
@@ -41,9 +55,20 @@ namespace InventoryPackage
             this.description = description;
         }
 
+        public static void SetStackSize(ItemType itemType, int stackSize)
+        {
+            itemType.SetStackSize(stackSize);
+        }
+
         internal void SetStackSize(int stackSize)
         {
             this.stackSize = stackSize;
+        }
+
+
+        public static void SetIcon(ItemType itemType, Texture2D icon)
+        {
+            itemType.SetIcon(icon);
         }
 
         internal void SetIcon(Texture2D icon)
