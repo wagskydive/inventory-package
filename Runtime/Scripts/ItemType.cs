@@ -3,10 +3,12 @@ using UnityEngine;
 
 namespace InventoryPackage
 {
-    public class ItemType : IItemType
+    public class ItemType : ScriptableObject, IItemType
     {
+        
+        
         public string TypeName { get => typeName; }
-        [SerializeField] private readonly string typeName;
+        [SerializeField] private string typeName;
 
         public string Description { get => description; }
         [SerializeField] private string description;
@@ -19,11 +21,19 @@ namespace InventoryPackage
         private Texture2D icon;
 
 
-        public ItemType(string typeName, int stackSize = 100, string discription = "no description written.")
+        public static ItemType CreateNew(string typeName, int stackSize = 100, string discription = "no description written.")
         {
-            this.typeName = typeName;
-            this.description = discription;
-            this.stackSize = stackSize;
+            ItemType itemType = (ItemType)ScriptableObject.CreateInstance(typeof(ItemType));
+            itemType.SetTypeName(typeName);
+            itemType.SetDescription(discription);
+            itemType.SetStackSize(stackSize);
+
+            return itemType;
+        }
+
+        internal void SetTypeName(string name)
+        {
+            this.typeName = name;
         }
 
         internal void SetDescription(string description)
@@ -46,7 +56,7 @@ namespace InventoryPackage
 
         public static ItemType Empty()
         {
-            return new ItemType("Empty", 1);
+            return ItemType.CreateNew("Empty", 1);
         }
 
 

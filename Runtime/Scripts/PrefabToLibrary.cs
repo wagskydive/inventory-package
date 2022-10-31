@@ -46,7 +46,7 @@ namespace InventoryPackage
                     {
 
 
-                        ItemType itemType = new ItemType(itemTransforms[i].name.TrimEnd(' '));
+                        ItemType itemType = ItemType.CreateNew(itemTransforms[i].name.TrimEnd(' '));
 
                         if (itemTransforms[i].GetComponent<SpriteRenderer>() != null)
                         {

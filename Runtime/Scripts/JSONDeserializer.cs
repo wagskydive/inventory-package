@@ -26,7 +26,7 @@ namespace InventoryPackage
 
             foreach(JSONObject obj in json.GetValueOrDefault("ItemTypes", json))
             {
-                itemTypes.Add(new ItemType(obj["name"], obj["stack size"]));
+                itemTypes.Add(ItemType.CreateNew(obj["name"], obj["stack size"]));
             }
             return itemTypes.ToArray();
         }
