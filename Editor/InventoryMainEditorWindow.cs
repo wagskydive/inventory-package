@@ -6,13 +6,13 @@ using UnityEditor;
 using InventoryPackage;
 using UnityEngine.UIElements;
 using UnityEditor.UIElements;
+using System;
 
 public class InventoryMainEditorWindow : EditorWindow
 {
-    string path = "Assets/inventory-package/UnitTests/TestResources/TestItemLibrary.json";
+    string path = "";
 
-
-
+    GUIContent[] itemTypeGuiContents;
 
     ItemLibrary library;
     RecipeEditorWindow recipeEditorWindow;
@@ -24,38 +24,99 @@ public class InventoryMainEditorWindow : EditorWindow
     }
 
     GameObject prefab;
+
+    void ResetLibrary(ItemLibrary library)
+    {
+        this.library = library;
+        SetEditorIcons(library);
+        ResetGuiContent(library);
+    }
+
+    private void SetEditorIcons(ItemLibrary library)
+    {
+        int amountOfItems = library.AllItemTypes.Length;
+        for (int i = 0; i < amountOfItems; i++)
+        {
+            //EditorGUIUtility.SetIconForObject(library.AllItemTypes[i], library.AllItemTypes[i].Icon);
+        }
+    }
+
+    private void ResetGuiContent(ItemLibrary library)
+    {
+        int amountOfItems = library.AllItemTypes.Length;
+        itemTypeGuiContents = new GUIContent[amountOfItems];
+
+
+        for (int i = 0; i < amountOfItems; i++)
+        {
+            itemTypeGuiContents[i] = new GUIContent(library.AllItemTypes[i].TypeName, library.AllItemTypes[i].TypeName);
+
+        }
+    }
+
     void OnGUI()
     {
         GUILayout.Label("Inventroy Editor");
 
-        //inventoryPackageManager = EditorGUILayout.PropertyField()
-        //GUILayout.ObjectField(inventoryPackageManager
-        GUILayout.BeginHorizontal();
-        if (GUILayout.Button("Read Library From Prefab"))
+        GUILayout.BeginVertical();
+        if (library == null)
         {
-            library = JSONDeserializer.CreateLibraryFromJSON(path);
+            if (path == "" && GUILayout.Button(new GUIContent("Select Inventory Location", "select location to read and write inventory data files")))
+            {
+                path = EditorUtility.OpenFolderPanel("Select Inventory Location", "", "inventory");
+            }
+            if (path != "")
+            {
+                GUILayout.TextField(path);
+                if (File.Exists(path + "itemLibrary.json"))
+                {
+                    ResetLibrary(JSONDeserializer.CreateLibraryFromJSON(path));
+
+                }
+                else
+                {
+                    prefab = (GameObject)EditorGUILayout.ObjectField("Prefab", prefab, typeof(GameObject), false);
+                    if (GUILayout.Button(new GUIContent("Read Library From Prefab", " Read library data from prefab file")))
+                    {
+
+                        ResetLibrary(PrefabToLibrary.LibraryFromPrefab(prefab));
+
+                    }
+                }
+            }
         }
-                if (GUILayout.Button("Read Library From Json"))
-        {
-            library = JSONDeserializer.CreateLibraryFromJSON(path);
-        }
-        GUILayout.EndHorizontal();
-
-
-        path = GUILayout.TextField(path, 256);
+        GUILayout.EndVertical();
 
 
 
 
 
-        prefab = (GameObject)EditorGUILayout.ObjectField("Example GO", prefab, typeof(GameObject), true);
+
+
+
+
+
+
         if (library != null)
         {
-            int selection = GUILayout.SelectionGrid(-1, LibraryHandler.LibraryNames(library), 10);
-            if (selection != -1)
+            GUILayout.BeginVertical();
+
+            for (int i = 0; i < itemTypeGuiContents.Length; i++)
             {
-                Debug.Log("Grid Selection: " + selection);
+                GUILayout.BeginHorizontal();
+                GUIContent icon = new GUIContent(library.AllItemTypes[i].TypeName, library.AllItemTypes[i].Icon, library.AllItemTypes[i].TypeName);
+
+
+                GUILayout.EndHorizontal();
             }
+            GUILayout.EndVertical();
+
+
+
+
+
+
+
 
             if (library.AllRecipes != null)
             {

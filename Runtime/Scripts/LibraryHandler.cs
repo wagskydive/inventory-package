@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace InventoryPackage
 {
@@ -52,6 +53,12 @@ namespace InventoryPackage
             }
 
             return recipes.ToArray();
+        }
+
+        public static void SetIcon(Texture2D icon, ItemType itemType )
+        {
+            itemType.SetIcon(icon);
+
         }
 
         
