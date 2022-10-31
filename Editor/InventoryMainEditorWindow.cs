@@ -81,9 +81,9 @@ public class InventoryMainEditorWindow : EditorWindow
             }
             GUILayout.Label("Or");
             prefab = (GameObject)EditorGUILayout.ObjectField("Prefab", prefab, typeof(GameObject), false);
-            if (GUILayout.Button(new GUIContent("Read Library From Prefab", " Read library data from prefab file")))
+            if (prefab != null && GUILayout.Button(new GUIContent("Read Library From Prefab", " Read library data from prefab file")))
             {
-                if (prefab != null && PrefabToLibrary.ValidatePrefab(prefab))
+                if (PrefabToLibrary.ValidatePrefab(prefab))
                 {
                     ResetLibrary(PrefabToLibrary.LibraryFromPrefab(prefab));
                 }
