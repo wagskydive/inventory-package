@@ -18,6 +18,11 @@ namespace InventoryPackage
         public Recipe[] AllRecipes {get => allRecipes;}
 
 
+        [SerializeField]
+        private string iconsPath = "";
+        public string IconsPath { get=>iconsPath; }
+
+
         internal ItemLibrary(string libraryName, ItemType[] allItemTypes)
         {
             this.libraryName = libraryName;
@@ -29,6 +34,9 @@ namespace InventoryPackage
             this.allRecipes = recipes;
         }
 
-        
+        internal void SetIconsPath(string iconsPath)
+        {
+            this.iconsPath = iconsPath;
+        }
     }
 }

@@ -6,7 +6,7 @@ namespace InventoryPackage
     public static class LibraryHandler
     {
         public static Inventory MakeCreativeMenu(ItemLibrary library)
-        {          
+        {
             Inventory inventory = InventoryBuilder.CreateInventory(library.AllItemTypes.Length);
             for (int i = 0; i < library.AllItemTypes.Length; i++)
             {
@@ -22,7 +22,7 @@ namespace InventoryPackage
 
         public static ItemType GetItemTypeByName(string name, ItemLibrary library)
         {
-            for (int i = 0; i < library.AllItemTypes.Length; i++) 
+            for (int i = 0; i < library.AllItemTypes.Length; i++)
             {
                 if (library.AllItemTypes[i].TypeName == name)
                 {
@@ -32,7 +32,7 @@ namespace InventoryPackage
             return ItemType.Empty();
         }
 
-        
+
         public static string[] LibraryNames(ItemLibrary library)
         {
             List<string> libraryNames = new List<string>();
@@ -55,13 +55,22 @@ namespace InventoryPackage
             return recipes.ToArray();
         }
 
-        public static void SetIcon(Texture2D icon, ItemType itemType )
+        public static void SetIcons(ItemType[] itemTypes, Texture2D[] icons)
         {
-            itemType.SetIcon(icon);
+            if (itemTypes.Length != icons.Length)
+            {
+                for (int i = 0; i < itemTypes.Length; i++)
+                {
+                    ItemType.SetIcon(itemTypes[i], icons[i]);
+                }
+            }
 
         }
 
-        
+        public static void SetIconsPath(string path, ItemLibrary library)
+        {
+            library.SetIconsPath(path);
+        }
 
     }
 }

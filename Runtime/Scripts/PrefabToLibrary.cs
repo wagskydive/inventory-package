@@ -51,12 +51,12 @@ namespace InventoryPackage
                         if (itemTransforms[i].GetComponent<SpriteRenderer>() != null)
                         {
                             SpriteRenderer spriteRenderer = itemTransforms[i].GetComponent<SpriteRenderer>();
-                            itemType.SetIcon(spriteRenderer.sprite.texture);
+                            ItemType.SetIcon(itemType,spriteRenderer.sprite.texture);
                             
                         }
                         else
                         {
-                            itemType.SetIcon(Resources.Load<Texture2D>("fallbackIcon.png") as Texture2D);
+                            ItemType.SetIcon(itemType,Resources.Load<Texture2D>("fallbackIcon.png") as Texture2D);
                         }
                         itemTypes.Add(itemType);
                     }

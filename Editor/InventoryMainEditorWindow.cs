@@ -66,12 +66,13 @@ public class InventoryMainEditorWindow : EditorWindow
 
     void OnGUI()
     {
+        GUILayout.BeginVertical();
         GUILayout.Label("Inventory Editor");
 
 
         if (library == null)
         {
-            GUILayout.BeginVertical();
+
             GUILayout.Label("No Library Loaded");
             if (GUILayout.Button(new GUIContent("Load inventory json", "select a json library file")))
             {
@@ -91,41 +92,86 @@ public class InventoryMainEditorWindow : EditorWindow
 
             }
 
-            GUILayout.EndVertical();
+
         }
 
         if (library != null)
         {
-            GUILayout.BeginHorizontal();
-
-            GUILayout.BeginVertical();
-
             GUILayout.Label("Library " + library.LibraryName + " loaded");
 
             int selected = -1;
-            selected = GUILayout.SelectionGrid(selected, MakeLibraryButtons(library), 8,GUILayout.MaxWidth(250));
+            int gridcolumns = 8;
+            selected = GUILayout.SelectionGrid(selected, MakeLibraryButtons(library), gridcolumns, GUILayout.MaxWidth(250), GUILayout.MaxHeight(library.AllItemTypes.Length / gridcolumns * 64));
 
-            if(selected != -1)
+            if (selected != -1)
             {
                 itemTypeEditorWindow = GetWindow<ItemTypeEditorWindow>("Item Type Editor");
                 itemTypeEditorWindow.SetItemType(library.AllItemTypes[selected]);
-                
+
             }
-            GUILayout.EndVertical();
 
 
-            GUILayout.BeginVertical();
+
+            if (library.IconsPath == "")
+            {
+
+
+                if (GUILayout.Button(new GUIContent("Load icons from matching names in folder", "Load icons into Item types from matching names")))
+                {
+                    string iconsPath = "";
+                    iconsPath = EditorUtility.OpenFolderPanel("Set Icon Folder", "", "ItemIcons");
+
+                    if (iconsPath != "")
+                    {
+                        DirectoryInfo dir = new DirectoryInfo(iconsPath);
+                        FileInfo[] fileInfos = dir.GetFiles();
+                        for (int i = 0; i < fileInfos.Length; i++)
+                        {
+                            if (fileInfos[i].Extension == ".png" || fileInfos[i].Extension == ".PNG")
+                            {
+                                string itemTypeName = fileInfos[i].Name.ToString().Split('.')[0];
+                                ItemType itemType = LibraryHandler.GetItemTypeByName(itemTypeName, library);
+                                if (itemType != null && itemType.TypeName != "Empty")
+                                {
+                                    string[] pathArray = fileInfos[i].FullName.Split("\\", StringSplitOptions.RemoveEmptyEntries);
+                                    string resultPath = "";
+                                    bool started = false;
+                                    for (int j = 0; j < pathArray.Length; j++)
+                                    {
+                                        if (started)
+                                        {
+                                            resultPath = resultPath + "/" + pathArray[j];
+                                        }
+                                        if (pathArray[j] == "Assets")
+                                        {
+                                            started = true;
+                                            resultPath = resultPath + pathArray[j];
+                                        }
+
+
+                                    }
+
+                                    LibraryHandler.SetIconsPath(resultPath, library);
+                                    ItemType.SetIcon(itemType, (Texture2D)AssetDatabase.LoadAssetAtPath(library.IconsPath, typeof(Texture2D)));
+                                }
+
+                            }
+                        }
+                    }
+                }
+
+            }
+            else
+            {
+
+            }
 
             if (GUILayout.Button(new GUIContent("Recipe Editor", "Open Recipe Editor")))
             {
                 recipeEditorWindow = GetWindow<RecipeEditorWindow>("Recipe Editor");
                 recipeEditorWindow.SetLibrary(library);
             }
-            GUILayout.EndVertical();
 
-
-
-            GUILayout.EndHorizontal();
 
 
 
@@ -138,11 +184,12 @@ public class InventoryMainEditorWindow : EditorWindow
                     recipeEditorWindow.SetLibrary(library);
                     recipeEditorWindow.SetCurrentRecipe(library.AllRecipes[recipeSelection]);
                 }
-
             }
         }
-
+        GUILayout.EndVertical();
     }
+
+
     GUILayoutOption[] ObjectOptions()
     {
         GUILayoutOption[] options = new GUILayoutOption[1];

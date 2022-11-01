@@ -71,7 +71,7 @@ namespace InventoryPackage
             itemType.SetIcon(icon);
         }
 
-        internal void SetIcon(Texture2D icon)
+        private void SetIcon(Texture2D icon)
         {
             this.icon = icon;
         }
