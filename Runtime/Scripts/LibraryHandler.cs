@@ -55,6 +55,29 @@ namespace InventoryPackage
             return recipes.ToArray();
         }
 
+        public static ItemAmount[] RecipeResults(ItemLibrary library)
+        {
+            List<ItemAmount> recipes = new List<ItemAmount>();
+            foreach (var recipe in library.AllRecipes)
+            {
+                recipes.Add(recipe.Result);
+            }
+
+            return recipes.ToArray();
+        }
+
+        public static ItemType[] RecipeResultTypes(ItemLibrary library)
+        {
+            List<ItemType> recipes = new List<ItemType>();
+            foreach (var recipe in library.AllRecipes)
+            {
+                recipes.Add(recipe.Result.Item);
+            }
+
+            return recipes.ToArray();
+        }
+
+
         public static void SetIcons(ItemType[] itemTypes, Texture2D[] icons)
         {
             if (itemTypes.Length != icons.Length)
