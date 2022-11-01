@@ -15,6 +15,10 @@ public class ItemTypeEditorWindow : EditorWindow
 
     void OnGUI()
     {
+        if(itemType == null)
+        {
+            return;
+        }
         GUILayout.Label("Item Type Editor: "+ itemType.TypeName);
         GUILayout.Space(10);
 
