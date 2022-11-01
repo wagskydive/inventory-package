@@ -10,15 +10,17 @@ namespace InventoryPackage
 
         public string ResultType { get => result.Item.TypeName;}
 
+        public ItemAmount Result { get => result;}
+
         public string ToolType { get => tool.TypeName; }
 
         public float  CraftingTime { get => craftingTime; }
 
 
-        Inventory ingredients;
-        ItemAmount result;
-        float craftingTime;
-        ItemType tool;
+        readonly Inventory ingredients;
+        readonly ItemAmount result;
+        readonly float craftingTime;
+        readonly ItemType tool;
         
 
         internal Recipe(Inventory ingredients, float craftingTime, ItemType tool, ItemAmount result)
