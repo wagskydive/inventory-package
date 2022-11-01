@@ -18,9 +18,6 @@ public class InventoryMainEditorWindow : EditorWindow
     RecipeEditorWindow recipeEditorWindow;
     ItemTypeEditorWindow itemTypeEditorWindow;
 
-
-
-
     [MenuItem("Inventory Package/Inventory Editor")]
     static void ShowWindow()
     {
@@ -33,19 +30,15 @@ public class InventoryMainEditorWindow : EditorWindow
     {
         this.library = library;
         SetEditorIcons(library);
-
-
     }
 
-    private GUIContent[] MakeLibraryButtons(ItemLibrary library)
+    private GUIContent[] MakeItemTypeButtons(ItemType[] itemTypes)
     {
+        GUIContent[] buttons = new GUIContent[itemTypes.Length];
 
-
-        GUIContent[] buttons = new GUIContent[library.AllItemTypes.Length];
-
-        for (int i = 0; i < library.AllItemTypes.Length; i++)
+        for (int i = 0; i < itemTypes.Length; i++)
         {
-            GUIContent buttonContent = new GUIContent(library.AllItemTypes[i].Icon, library.AllItemTypes[i].TypeName);
+            GUIContent buttonContent = new GUIContent(itemTypes[i].Icon, itemTypes[i].TypeName);
             buttons[i] = buttonContent;
         }
         return buttons;
@@ -63,16 +56,21 @@ public class InventoryMainEditorWindow : EditorWindow
         }
     }
 
+    int ItemTypeGrid(ItemType[] items,int columns, int slotSize)
+    {   
+        
+        int selected = -1;
+        selected = GUILayout.SelectionGrid(selected, MakeItemTypeButtons(items), columns, GUILayout.Width(slotSize * columns), GUILayout.MaxHeight(items.Length / columns * slotSize*2));
+        return selected;
+    }
+
 
     void OnGUI()
     {
         GUILayout.BeginVertical();
-        GUILayout.Label("Inventory Editor");
-
 
         if (library == null)
         {
-
             GUILayout.Label("No Library Loaded");
             if (GUILayout.Button(new GUIContent("Load inventory json", "select a json library file")))
             {
@@ -88,11 +86,7 @@ public class InventoryMainEditorWindow : EditorWindow
                 {
                     ResetLibrary(PrefabToLibrary.LibraryFromPrefab(prefab));
                 }
-
-
             }
-
-
         }
 
         if (library != null)
@@ -100,22 +94,17 @@ public class InventoryMainEditorWindow : EditorWindow
             GUILayout.Label("Library " + library.LibraryName + " loaded");
 
             int selected = -1;
-            int gridcolumns = 8;
-            selected = GUILayout.SelectionGrid(selected, MakeLibraryButtons(library), gridcolumns, GUILayout.MaxWidth(250), GUILayout.MaxHeight(library.AllItemTypes.Length / gridcolumns * 64));
+
+            selected = ItemTypeGrid(library.AllItemTypes,8,32);
 
             if (selected != -1)
             {
                 itemTypeEditorWindow = GetWindow<ItemTypeEditorWindow>("Item Type Editor");
                 itemTypeEditorWindow.SetItemType(library.AllItemTypes[selected]);
-
             }
-
-
 
             if (library.IconsPath == "")
             {
-
-
                 if (GUILayout.Button(new GUIContent("Load icons from matching names in folder", "Load icons into Item types from matching names")))
                 {
                     string iconsPath = "";
@@ -147,8 +136,6 @@ public class InventoryMainEditorWindow : EditorWindow
                                             started = true;
                                             resultPath = resultPath + pathArray[j];
                                         }
-
-
                                     }
 
                                     LibraryHandler.SetIconsPath(resultPath, library);
@@ -172,12 +159,9 @@ public class InventoryMainEditorWindow : EditorWindow
                 recipeEditorWindow.SetLibrary(library);
             }
 
-
-
-
             if (library.AllRecipes != null)
             {
-                int recipeSelection = GUILayout.SelectionGrid(-1, LibraryHandler.RecipesResultTypes(library), 10);
+                int recipeSelection = ItemTypeGrid(LibraryHandler.RecipeResultTypes(library),8,32);
                 if (recipeSelection != -1)
                 {
                     recipeEditorWindow = GetWindow<RecipeEditorWindow>("Recipe Editor");
