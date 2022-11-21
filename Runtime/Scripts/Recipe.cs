@@ -20,9 +20,9 @@ namespace InventoryPackage
 
 
         private Inventory ingredients;
-        readonly ItemAmount result;
-        readonly float craftingTime;
-        readonly ItemType toolType;
+        private ItemAmount result;
+        private float craftingTime;
+        private ItemType toolType;
 
 
         internal Recipe(Inventory ingredients, float craftingTime, ItemType tool, ItemAmount result)
@@ -37,6 +37,18 @@ namespace InventoryPackage
         {
             this.ingredients = ingredients;
         }
+
+        internal void SetToolType(ItemType toolType)
+        {
+            this.toolType = toolType;
+        }
+
+        internal void SetCraftingTime(float craftingTime)
+        {
+            this.craftingTime = craftingTime;
+        }
     }
 }
+
+
 
