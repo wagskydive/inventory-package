@@ -40,6 +40,12 @@ namespace InventoryPackage
             recipe.SetIngredients(newInventory);
         }
 
+        public static void SetToolType(Recipe recipe, ItemType toolType)
+        {
+            recipe.SetToolType(toolType);
+        }
+  
+
         public static void RemoveIngredient(Recipe recipe, int index)
         {
             Inventory newInventory = InventoryBuilder.CreateInventory(recipe.Ingredients.Slots.Length - 1);
@@ -60,6 +66,11 @@ namespace InventoryPackage
         public static void SetIngredientAmount(Recipe recipe, int index, int amount)
         {
             recipe.Ingredients.Slots[index].SetAmount(amount);
+        }
+
+        public static void SetCraftingTime(Recipe recipe, float craftingTime)
+        {
+            recipe.SetCraftingTime(craftingTime);
         }
     }
 }
