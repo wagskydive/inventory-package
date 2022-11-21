@@ -84,6 +84,7 @@ public class RecipeEditorWindow : EditorWindow
     {
         RecipeCreator.AddIngredient(currentRecipe, new ItemAmount(ValidItems()[obj], 1));
         itemSelectionWindow.OnSelection -= AddIngredientRequest;
+        Repaint();
     }
 
     private void RemoveIngredientButton(int index)
@@ -92,6 +93,7 @@ public class RecipeEditorWindow : EditorWindow
         if (GUILayout.Button(content, GUILayout.Width(32), GUILayout.Height(32)))
         {
             RecipeCreator.RemoveIngredient(currentRecipe, index);
+            Repaint();
         }
     }
 
@@ -126,16 +128,40 @@ public class RecipeEditorWindow : EditorWindow
             GUILayout.EndHorizontal();
 
             GUILayout.Label("CraftingTime");
-            int craftingTime = (int)currentRecipe.CraftingTime;
-            craftingTime = EditorGUILayout.IntField(craftingTime);
+            float craftingTime = currentRecipe.CraftingTime;
+            craftingTime = EditorGUILayout.FloatField(craftingTime);
+            if (craftingTime != currentRecipe.CraftingTime)
+            {
+                RecipeCreator.SetCraftingTime(currentRecipe,craftingTime);
+            }
 
+
+
+            GUIContent toolTypeButtonContent;
             if (currentRecipe.ToolType != null)
             {
                 GUILayout.Label("Required tool");
-                GUIContent toolTypeButtonContent = new GUIContent(currentRecipe.ToolType.Icon, currentRecipe.ToolType.TypeName);
+                toolTypeButtonContent = new GUIContent(currentRecipe.ToolType.Icon, currentRecipe.ToolType.TypeName);
             }
+            else
+            {
+                GUILayout.Label("No tool required");
+                toolTypeButtonContent = EditorGUIUtility.IconContent("CreateAddNew@2x");
+            }
+            if (GUILayout.Button(toolTypeButtonContent, GUILayout.Width(32), GUILayout.Height(32)))
+            {
+                itemSelectionWindow = GetWindow<ItemSelectionEditorWindow>();
+                itemSelectionWindow.SetItems(ValidItems());
+                itemSelectionWindow.OnSelection += SetToolType;
+            }
+
+
         }
     }
 
-
+    private void SetToolType(int obj)
+    {
+        RecipeCreator.SetToolType(currentRecipe,ValidItems()[obj]);
+        Repaint();
+    }
 }
