@@ -45,9 +45,16 @@ namespace InventoryPackage
         {
             return new ItemAmount(ItemType.Empty(),0);
         }
+
+        public void SetAmount(int amount)
+        {
+            Amount = amount;
+        }
     }
+}
+    
         
 
 
 
-}
+

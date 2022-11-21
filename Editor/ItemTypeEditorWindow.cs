@@ -31,6 +31,8 @@ public class ItemTypeEditorWindow : EditorWindow
         GUILayout.Space(20);
         GUILayout.Label("Icon: ");
         ItemType.SetIcon(itemType,(Texture2D)EditorGUILayout.ObjectField(itemType.Icon, typeof(Texture2D), false,GUILayout.Width(150),GUILayout.Height(150)));
+        
+        
         if(GUILayout.Button("save", GUILayout.MaxWidth(50)))
         {
             string savePath = "";

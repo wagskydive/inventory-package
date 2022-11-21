@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace InventoryPackage
@@ -95,5 +96,27 @@ namespace InventoryPackage
             library.SetIconsPath(path);
         }
 
+        public static ItemType[] FilteredTypes(ItemLibrary library, ItemType[] excludedTypes)
+        {
+            List<ItemType> filteredTypes = new List<ItemType>();
+            foreach (var item in library.AllItemTypes)
+            {
+                if (!excludedTypes.Contains(item)) filteredTypes.Add(item);
+            }
+            return filteredTypes.ToArray();
+        }
+
+        public static void AddRecipeToLibrary(ItemLibrary library, Recipe recipe)
+        {
+            Recipe[] recipes = new Recipe[library.AllRecipes.Length + 1];
+            for (int i = 0; i < library.AllRecipes.Length; i++)
+            {
+                recipes[i] = library.AllRecipes[i];
+            }
+
+            recipes[library.AllRecipes.Length] = recipe;
+
+            library.ReplaceRecipes(recipes);
+        }
     }
 }

@@ -4,7 +4,7 @@ namespace InventoryPackage
     {
         public ItemAmount[] Slots{get; private set;}
 
-        internal Inventory(int availableSlots)
+        internal Inventory(int availableSlots = 100)
         {
             Slots = new ItemAmount[availableSlots];
             Validate();

@@ -13,6 +13,7 @@ public class InventoryMainEditorWindow : EditorWindow
     string path = "";
 
     GUIContent[] itemTypeGuiContents;
+    ItemSelectionEditorWindow itemSelectionWindow;
 
     ItemLibrary library;
     RecipeEditorWindow recipeEditorWindow;
@@ -56,11 +57,10 @@ public class InventoryMainEditorWindow : EditorWindow
         }
     }
 
-    int ItemTypeGrid(ItemType[] items,int columns, int slotSize)
-    {   
-        
+    int ItemTypeGrid(ItemType[] items, int columns, int slotSize)
+    {
         int selected = -1;
-        selected = GUILayout.SelectionGrid(selected, MakeItemTypeButtons(items), columns, GUILayout.Width(slotSize * columns), GUILayout.MaxHeight(items.Length / columns * slotSize*2));
+        selected = GUILayout.SelectionGrid(selected, MakeItemTypeButtons(items), columns, GUILayout.Width(slotSize * columns), GUILayout.MaxHeight(items.Length / columns * slotSize * 2));
         return selected;
     }
 
@@ -96,7 +96,7 @@ public class InventoryMainEditorWindow : EditorWindow
 
             int selected = -1;
 
-            selected = ItemTypeGrid(library.AllItemTypes,8,32);
+            selected = ItemTypeGrid(library.AllItemTypes, 8, 32);
 
             if (selected != -1)
             {
@@ -112,10 +112,6 @@ public class InventoryMainEditorWindow : EditorWindow
                 }
 
             }
-            else
-            {
-
-            }
 
             if (GUILayout.Button(new GUIContent("Recipe Editor", "Open Recipe Editor")))
             {
@@ -123,9 +119,10 @@ public class InventoryMainEditorWindow : EditorWindow
                 recipeEditorWindow.SetLibrary(library);
             }
 
+            GUILayout.Label("Recipes");
             if (library.AllRecipes != null)
             {
-                int recipeSelection = ItemTypeGrid(LibraryHandler.RecipeResultTypes(library),8,32);
+                int recipeSelection = ItemTypeGrid(LibraryHandler.RecipeResultTypes(library), 8, 32);
                 if (recipeSelection != -1)
                 {
                     recipeEditorWindow = GetWindow<RecipeEditorWindow>("Recipe Editor");
@@ -133,8 +130,27 @@ public class InventoryMainEditorWindow : EditorWindow
                     recipeEditorWindow.SetCurrentRecipe(library.AllRecipes[recipeSelection]);
                 }
             }
+            AddRecipeButton();
         }
         GUILayout.EndVertical();
+    }
+
+    private void AddRecipeButton()
+    {
+        GUIContent content = EditorGUIUtility.IconContent("CreateAddNew@2x");
+        if (GUILayout.Button(content, GUILayout.Width(32), GUILayout.Height(32)))
+        {
+            itemSelectionWindow = GetWindow<ItemSelectionEditorWindow>();
+            itemSelectionWindow.SetItems(library.AllItemTypes);
+            itemSelectionWindow.OnSelection += CreateNewRecipe;
+        }
+    }
+
+    private void CreateNewRecipe(int obj)
+    {
+        LibraryHandler.AddRecipeToLibrary(library, RecipeCreator.CreateRecipe(new ItemAmount(library.AllItemTypes[obj], 1)));
+
+        itemSelectionWindow.OnSelection -= CreateNewRecipe;
     }
 
     private void SetIcons(string iconsPath)
@@ -142,7 +158,7 @@ public class InventoryMainEditorWindow : EditorWindow
 
         if (iconsPath != "")
         {
-            if(iconsPath.EndsWith(".json"))
+            if (iconsPath.EndsWith(".json"))
             {
                 iconsPath = Path.GetDirectoryName(iconsPath);
             }

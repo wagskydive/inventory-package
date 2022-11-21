@@ -74,7 +74,7 @@ namespace UnitTesting
             Recipe[] allRecipes = JSONDeserializer.ReadAllRecipes(testFolderPath + "/TestItemLibrary.json",itemLibrary);
 
             
-            UnityEngine.Debug.Log(TestDataFormatter.ToSentence(GetCurrentMethodName()) + ": expected: " + "a recipe" + " actual: " + allRecipes[0].Ingredients[0]);
+            UnityEngine.Debug.Log(TestDataFormatter.ToSentence(GetCurrentMethodName()) + ": expected: " + "a recipe" + " actual: " + allRecipes[0].IngredientNames[0]);
 
             Assert.IsNotNull(allRecipes[0]);
         }

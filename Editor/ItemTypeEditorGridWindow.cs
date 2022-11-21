@@ -4,8 +4,12 @@ using InventoryPackage;
 using UnityEngine.UIElements;
 using UnityEditor.UIElements;
 
-public class InventoryEditorGridWindow : EditorWindow
+public class ItemTypeEditorGridWindow : EditorWindow
 {
-    
-    
+    void OnGUI()
+    {
+        
+    }
+
+
 }
