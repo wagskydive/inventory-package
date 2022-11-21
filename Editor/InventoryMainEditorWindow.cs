@@ -76,6 +76,7 @@ public class InventoryMainEditorWindow : EditorWindow
             {
                 path = EditorUtility.OpenFilePanel("Select Inventory json", "", "json");
                 ResetLibrary(JSONDeserializer.CreateLibraryFromJSON(path));
+                SetIcons(path);
 
             }
             GUILayout.Label("Or");
@@ -107,44 +108,7 @@ public class InventoryMainEditorWindow : EditorWindow
             {
                 if (GUILayout.Button(new GUIContent("Load icons from matching names in folder", "Load icons into Item types from matching names")))
                 {
-                    string iconsPath = "";
-                    iconsPath = EditorUtility.OpenFolderPanel("Set Icon Folder", "", "ItemIcons");
-
-                    if (iconsPath != "")
-                    {
-                        DirectoryInfo dir = new DirectoryInfo(iconsPath);
-                        FileInfo[] fileInfos = dir.GetFiles();
-                        for (int i = 0; i < fileInfos.Length; i++)
-                        {
-                            if (fileInfos[i].Extension == ".png" || fileInfos[i].Extension == ".PNG")
-                            {
-                                string itemTypeName = fileInfos[i].Name.ToString().Split('.')[0];
-                                ItemType itemType = LibraryHandler.GetItemTypeByName(itemTypeName, library);
-                                if (itemType != null && itemType.TypeName != "Empty")
-                                {
-                                    string[] pathArray = fileInfos[i].FullName.Split("\\", StringSplitOptions.RemoveEmptyEntries);
-                                    string resultPath = "";
-                                    bool started = false;
-                                    for (int j = 0; j < pathArray.Length; j++)
-                                    {
-                                        if (started)
-                                        {
-                                            resultPath = resultPath + "/" + pathArray[j];
-                                        }
-                                        if (pathArray[j] == "Assets")
-                                        {
-                                            started = true;
-                                            resultPath = resultPath + pathArray[j];
-                                        }
-                                    }
-
-                                    LibraryHandler.SetIconsPath(resultPath, library);
-                                    ItemType.SetIcon(itemType, (Texture2D)AssetDatabase.LoadAssetAtPath(library.IconsPath, typeof(Texture2D)));
-                                }
-
-                            }
-                        }
-                    }
+                    SetIcons(EditorUtility.OpenFolderPanel("Set Icon Folder", "", "ItemIcons"));
                 }
 
             }
@@ -173,6 +137,49 @@ public class InventoryMainEditorWindow : EditorWindow
         GUILayout.EndVertical();
     }
 
+    private void SetIcons(string iconsPath)
+    {
+
+        if (iconsPath != "")
+        {
+            if(iconsPath.EndsWith(".json"))
+            {
+                iconsPath = Path.GetDirectoryName(iconsPath);
+            }
+            DirectoryInfo dir = new DirectoryInfo(iconsPath);
+            FileInfo[] fileInfos = dir.GetFiles();
+            for (int i = 0; i < fileInfos.Length; i++)
+            {
+                if (fileInfos[i].Extension == ".png" || fileInfos[i].Extension == ".PNG")
+                {
+                    string itemTypeName = fileInfos[i].Name.ToString().Split('.')[0];
+                    ItemType itemType = LibraryHandler.GetItemTypeByName(itemTypeName, library);
+                    if (itemType != null && itemType.TypeName != "Empty")
+                    {
+                        string[] pathArray = fileInfos[i].FullName.Split("\\", StringSplitOptions.RemoveEmptyEntries);
+                        string resultPath = "";
+                        bool started = false;
+                        for (int j = 0; j < pathArray.Length; j++)
+                        {
+                            if (started)
+                            {
+                                resultPath = resultPath + "/" + pathArray[j];
+                            }
+                            if (pathArray[j] == "Assets")
+                            {
+                                started = true;
+                                resultPath = resultPath + pathArray[j];
+                            }
+                        }
+
+                        LibraryHandler.SetIconsPath(resultPath, library);
+                        ItemType.SetIcon(itemType, (Texture2D)AssetDatabase.LoadAssetAtPath(library.IconsPath, typeof(Texture2D)));
+                    }
+
+                }
+            }
+        }
+    }
 
     GUILayoutOption[] ObjectOptions()
     {
