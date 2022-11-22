@@ -10,7 +10,7 @@ namespace InventoryPackage
         public string LibraryName { get=>libraryName; }
 
         [SerializeField]
-        private readonly ItemType[] allItemTypes;
+        private ItemType[] allItemTypes;
         public ItemType[] AllItemTypes {get => allItemTypes;}
 
         [SerializeField]
@@ -37,6 +37,12 @@ namespace InventoryPackage
         internal void SetIconsPath(string iconsPath)
         {
             this.iconsPath = iconsPath;
+        }
+
+        internal void AddItemType(ItemType itemType)
+        {
+            Array.Resize(ref allItemTypes, allItemTypes.Length + 1);
+            allItemTypes[allItemTypes.Length - 1] = itemType;
         }
     }
 }

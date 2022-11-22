@@ -108,15 +108,36 @@ namespace InventoryPackage
 
         public static void AddRecipeToLibrary(ItemLibrary library, Recipe recipe)
         {
-            Recipe[] recipes = new Recipe[library.AllRecipes.Length + 1];
-            for (int i = 0; i < library.AllRecipes.Length; i++)
+            Recipe[] recipes;
+            if (library.AllRecipes != null)
             {
-                recipes[i] = library.AllRecipes[i];
+                recipes = new Recipe[library.AllRecipes.Length + 1];
+                for (int i = 0; i < library.AllRecipes.Length; i++)
+                {
+                    recipes[i] = library.AllRecipes[i];
+                }
+
+                recipes[library.AllRecipes.Length] = recipe;
+            }
+            else
+            {
+                recipes = new Recipe[1];
+                recipes[0] = recipe;
             }
 
-            recipes[library.AllRecipes.Length] = recipe;
+
 
             library.ReplaceRecipes(recipes);
+        }
+
+        public static ItemLibrary CreateNewLibrary(string libraryName, ItemType[] itemTypes)
+        {
+            return new ItemLibrary(libraryName, itemTypes);
+        }
+
+        public static void AddItemType(ItemLibrary library,  ItemType newItemType)
+        {
+            library.AddItemType(newItemType);
         }
     }
 }

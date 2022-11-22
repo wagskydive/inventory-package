@@ -60,7 +60,9 @@ public class InventoryMainEditorWindow : EditorWindow
     int ItemTypeGrid(ItemType[] items, int columns, int slotSize)
     {
         int selected = -1;
-        selected = GUILayout.SelectionGrid(selected, MakeItemTypeButtons(items), columns, GUILayout.Width(slotSize * columns), GUILayout.MaxHeight(items.Length / columns * slotSize * 2));
+        var height = slotSize * Mathf.CeilToInt(items.Length / (float)columns);
+
+        selected = GUILayout.SelectionGrid(selected, MakeItemTypeButtons(items), columns, GUILayout.Width(slotSize * columns), GUILayout.Height(height));
         return selected;
     }
 
@@ -113,10 +115,12 @@ public class InventoryMainEditorWindow : EditorWindow
 
             }
 
-            if (GUILayout.Button(new GUIContent("Recipe Editor", "Open Recipe Editor")))
+            if (GUILayout.Button(new GUIContent("Add New Item Type", "Create a new item type")))
             {
-                recipeEditorWindow = GetWindow<RecipeEditorWindow>("Recipe Editor");
-                recipeEditorWindow.SetLibrary(library);
+                itemTypeEditorWindow = GetWindow<ItemTypeEditorWindow>("Item Type Editor");
+                ItemType newItemType = ItemType.CreateNew("my new item type");
+                LibraryHandler.AddItemType(library,newItemType);
+                itemTypeEditorWindow.SetItemType(newItemType);
             }
 
             GUILayout.Label("Recipes");
@@ -131,8 +135,35 @@ public class InventoryMainEditorWindow : EditorWindow
                 }
             }
             AddRecipeButton();
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button(new GUIContent("Save Library", "Save Changes"), GUILayout.Width(100)))
+            {
+                SaveChanges(library);
+            }
+            if (GUILayout.Button(new GUIContent("Cancel changes", "undo all changes"), GUILayout.Width(100)))
+            {
+                CancelChanges();
+            }
+
+            GUILayout.EndHorizontal();
         }
         GUILayout.EndVertical();
+    }
+
+    private void CancelChanges()
+    {
+        ResetLibrary(JSONDeserializer.CreateLibraryFromJSON(path));
+        SetIcons(path);
+    }
+
+    private void SaveChanges(ItemLibrary library)
+    {
+        string savePath = "";
+        savePath = EditorUtility.SaveFilePanel("Save Library", savePath, library.LibraryName, "json");
+        if (savePath != "")
+        {
+            JSONSerializer.SaveLibrary(library, savePath);
+        }
     }
 
     private void AddRecipeButton()

@@ -33,16 +33,6 @@ public class ItemTypeEditorWindow : EditorWindow
         ItemType.SetIcon(itemType,(Texture2D)EditorGUILayout.ObjectField(itemType.Icon, typeof(Texture2D), false,GUILayout.Width(150),GUILayout.Height(150)));
         
         
-        if(GUILayout.Button("save", GUILayout.MaxWidth(50)))
-        {
-            string savePath = "";
-            savePath = EditorUtility.SaveFilePanel("Save Texture",savePath, itemType.TypeName, "png");
-            if(savePath != "")
-            {
-                TextureSaver.SaveTextureToFile(itemType.Icon,savePath);
-            }
-            
-        }
         
         //EditorGUILayout.sp
         	

@@ -1,4 +1,5 @@
 using SimpleJSON;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -24,13 +25,18 @@ namespace InventoryPackage
 
             List<ItemType> itemTypes = new List<ItemType>();
 
-            foreach(JSONObject obj in json.GetValueOrDefault("ItemTypes", json))
+            foreach (JSONObject obj in json.GetValueOrDefault("ItemTypes", json))
             {
-                itemTypes.Add(ItemType.CreateNew(obj["name"], obj["stack size"]));
+                string typeName = obj.GetValueOrDefault("name", obj);
+                int stackSize = obj.GetValueOrDefault("stack size", obj);
+                string description = obj.GetValueOrDefault("description", obj);
+
+
+                itemTypes.Add(ItemType.CreateNew(typeName, stackSize, description));
             }
             return itemTypes.ToArray();
         }
-        
+
         public static ItemLibrary CreateLibraryFromJSON(string path)
         {
             JSONObject json = JSONObject.Parse(ReadJSON(path)).AsObject;
@@ -44,7 +50,7 @@ namespace InventoryPackage
             return library;
         }
 
-        public static Recipe ReadRecipe(JSONObject recipeJson, ItemLibrary library, string outputType)
+        public static Recipe ReadRecipe(JSONObject recipeJson, ItemLibrary library)
         {
             float craftingTime = recipeJson["craft time"];
 
@@ -53,46 +59,52 @@ namespace InventoryPackage
             JSONArray ingredientsJson = recipeJson.GetValueOrDefault("ingredients", recipeJson).AsArray;
 
             Inventory ingredients = InventoryBuilder.CreateInventory(ingredientsJson.Count);
-            
 
-            for(int i = 0; i < ingredientsJson.Count; i++)         
+
+            for (int i = 0; i < ingredientsJson.Count; i++)
             {
                 ItemType itemType = LibraryHandler.GetItemTypeByName(ingredientsJson[i]["type name"], library);
-                if(itemType.TypeName == "Empty")
+                if (itemType.TypeName == "Empty")
                 {
                     Debug.LogWarning("Ingredient type not found in library");
                 }
                 int amount = ingredientsJson[i]["quantity"];
 
-                ingredients.AddInEmptySlot(new ItemAmount(itemType, amount),i);
+                ingredients.AddInEmptySlot(new ItemAmount(itemType, amount), i);
             }
-            
-            ItemAmount results = new ItemAmount(LibraryHandler.GetItemTypeByName(outputType,library),recipeJson["output amount"]);
+
+            ItemAmount results = new ItemAmount(LibraryHandler.GetItemTypeByName(recipeJson["result"], library), recipeJson["output amount"]);
 
 
-            Recipe recipe = new Recipe(ingredients,craftingTime,tool,results);
+            Recipe recipe = new Recipe(ingredients, craftingTime, tool, results);
             return recipe;
         }
-        
+
         public static Recipe[] ReadAllRecipes(string path, ItemLibrary library)
         {
             JSONObject json = JSONObject.Parse(ReadJSON(path)).AsObject;
 
             List<Recipe> recipes = new List<Recipe>();
 
-            foreach(JSONObject obj in json.GetValueOrDefault("ItemTypes", json))
+            JSONArray recipeArray = json.GetValueOrDefault("Recipes", json).AsArray;
+            if (recipeArray != null)
             {
-                JSONObject recipeJson = obj.GetValueOrDefault("recipe",obj).AsObject;
-                if(recipeJson != null && obj["recipe"] != null)
+
+
+                foreach (JSONObject recipeJson in recipeArray)
                 {
-                    
-                    Recipe recipe = ReadRecipe(recipeJson,library, obj["name"]);
-                    recipes.Add(recipe);
+
+                    if (recipeJson != null)
+                    {
+
+                        Recipe recipe = ReadRecipe(recipeJson, library);
+                        recipes.Add(recipe);
+                    }
                 }
             }
             return recipes.ToArray();
         }
-        
+
     }
 }
 
