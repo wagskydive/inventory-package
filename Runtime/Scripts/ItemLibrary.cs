@@ -3,36 +3,46 @@ using UnityEngine;
 
 namespace InventoryPackage
 {
-    [Serializable]
     public class ItemLibrary
     {
         [SerializeField]
         private readonly string libraryName;
         public string LibraryName { get=>libraryName; }
 
-
         [SerializeField]
-        private readonly ItemType[] allItemTypes;
-
+        private ItemType[] allItemTypes;
         public ItemType[] AllItemTypes {get => allItemTypes;}
 
-        public ItemLibrary(string libraryName,ItemType[] allItemTypes)
+        [SerializeField]
+        private Recipe[] allRecipes;
+        public Recipe[] AllRecipes {get => allRecipes;}
+
+
+        [SerializeField]
+        private string iconsPath = "";
+        public string IconsPath { get=>iconsPath; }
+
+
+        internal ItemLibrary(string libraryName, ItemType[] allItemTypes)
         {
             this.libraryName = libraryName;
-            this.allItemTypes = allItemTypes;            
+            this.allItemTypes = allItemTypes;
+        }
+        
+        internal void ReplaceRecipes(Recipe[] recipes)
+        {
+            this.allRecipes = recipes;
         }
 
-        public Inventory CreativeMenu{get => MakeCreativeMenu();}
-
-        Inventory MakeCreativeMenu()
-        {          
-            Inventory inventory = InventoryBuilder.CreateInventory(AllItemTypes.Length);
-            for (int i = 0; i < AllItemTypes.Length; i++)
-            {
-                InventoryHandler.AddToInventory(new ItemAmount(AllItemTypes[i], AllItemTypes[i].StackSize), inventory);
-            }
-            return inventory;
+        internal void SetIconsPath(string iconsPath)
+        {
+            this.iconsPath = iconsPath;
         }
 
+        internal void AddItemType(ItemType itemType)
+        {
+            Array.Resize(ref allItemTypes, allItemTypes.Length + 1);
+            allItemTypes[allItemTypes.Length - 1] = itemType;
+        }
     }
 }

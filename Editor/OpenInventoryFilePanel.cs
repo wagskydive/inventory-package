@@ -4,7 +4,6 @@ using UnityEditor;
 
 public class OpenInventoryFilePanel : EditorWindow
 {
-    [MenuItem("Inventory Package/Load Inventory")]
     static void Apply()
     {
         string path = EditorUtility.OpenFilePanel("Open Inventory File", "", "inventory");

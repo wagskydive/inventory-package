@@ -1,14 +1,155 @@
 {
     "LibraryName": "Test Library",
-    "ItemTypes":
-    [
+    "ItemTypes": [
         {
             "name": "apple",
-            "stack size": 100           
+            "description": "fruit that is delicious and green or red",
+            "stack size": 100
         },
         {
             "name": "banana",
-            "stack size": 100    
+            "description": "fruit that is delicious and yellow",
+            "stack size": 100
+        },
+        {
+            "name": "orange",
+            "description": "fruit that is delicious and orange",
+            "stack size": 100
+        },
+        {
+            "name": "pear",
+            "description": "fruit that is delicious and usualy green",
+            "stack size": 100
+        },
+        {
+            "name": "water",
+            "description": "H2O liquid",
+            "stack size": 1000
+        },
+        {
+            "name": "grain",
+            "description": "raw from the land",
+            "stack size": 100
+        },
+        {
+            "name": "flour",
+            "description": "grain base substrate",
+            "stack size": 100
+        },
+        {
+            "name": "sugar",
+            "description": "sweetener",
+            "stack size": 100
+        },
+        {
+            "name": "mill",
+            "description": "used to mill grain",
+            "stack size": 10
+        },
+        {
+            "name": "oven",
+            "description": "used to bake cakes",
+            "stack size": 10
+        },
+        {
+            "name": "apple cake",
+            "description": "cake made from apples",
+            "stack size": 10
+        },
+        {
+            "name": "orange cake",
+            "description": "cake made from oranges",
+            "stack size": 10
+        },
+        {
+            "name": "pear cake",
+            "description": "cake made from pears",
+            "stack size": 10,
+            "recipe": {
+                "ingredients": [
+                    {
+                        "type name": "water",
+                        "quantity": 100
+                    },
+                    {
+                        "type name": "flour",
+                        "quantity": 30
+                    },
+                    {
+                        "type name": "sugar",
+                        "quantity": 10
+                    },
+                    {
+                        "type name": "pear",
+                        "quantity": 10
+                    }
+                ],
+                "tool": "oven",
+                "craft time": 5,
+                "output amount": 1
+            }
+        }
+    ],
+    "Recipes": [
+        {
+            "result": "flour",
+            "ingredients": [
+                {
+                    "type name": "grain",
+                    "quantity": 100
+                }
+            ],
+            "tool": "mill",
+            "craft time": 1,
+            "output amount": 10
+        },
+        {
+            "result": "apple cake",
+            "ingredients": [
+                {
+                    "type name": "water",
+                    "quantity": 100
+                },
+                {
+                    "type name": "flour",
+                    "quantity": 30
+                },
+                {
+                    "type name": "sugar",
+                    "quantity": 10
+                },
+                {
+                    "type name": "apple",
+                    "quantity": 10
+                }
+            ],
+            "tool": "oven",
+            "craft time": 5,
+            "output amount": 1
+        },
+        {
+            "result": "orange cake",
+            "ingredients": [
+                {
+                    "type name": "water",
+                    "quantity": 100
+                },
+                {
+                    "type name": "flour",
+                    "quantity": 30
+                },
+                {
+                    "type name": "sugar",
+                    "quantity": 10
+                },
+                {
+                    "type name": "orange",
+                    "quantity": 10
+                }
+            ],
+            "tool": "oven",
+            "craft time": 5,
+            "output amount": 1
         }
     ]
 }

@@ -1,8 +1,12 @@
 {
-    "name": "InventoryPackage",
+    "name": "InventoryPackageEditor",
     "rootNamespace": "",
-    "references": [],
-    "includePlatforms": [],
+    "references": [
+        "InventoryPackage"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,

@@ -3,24 +3,87 @@ using UnityEngine;
 
 namespace InventoryPackage
 {
-    [Serializable]
-    public class ItemType
+    public class ItemType : ScriptableObject, IItemType
     {
-        public string TypeName {get => typeName; }
-        [SerializeField] private readonly string typeName;
 
-        public int StackSize {get => stackSize;}
-        [SerializeField] private readonly int stackSize;
-        
-        public ItemType(string typeName, int stackSize)
+
+        public string TypeName { get => typeName; }
+        [SerializeField] private string typeName;
+
+        public string Description { get => description; }
+        [SerializeField] private string description;
+
+        public int StackSize { get => stackSize; }
+        [SerializeField] private int stackSize;
+
+        public Texture2D Icon { get => icon; }
+
+        private Texture2D icon;
+
+
+        public static ItemType CreateNew(string typeName, int stackSize = 100, string discription = "no description written.")
         {
-            this.typeName = typeName;
+            ItemType itemType = (ItemType)ScriptableObject.CreateInstance(typeof(ItemType));
+            itemType.SetTypeName(typeName);
+            itemType.SetDescription(discription);
+            itemType.SetStackSize(stackSize);
+
+            return itemType;
+        }
+
+
+
+        public static void SetTypeName(ItemType itemType, string typeName)
+        {
+            itemType.SetTypeName(typeName);
+        }
+
+        internal void SetTypeName(string name)
+        {
+            this.typeName = name;
+        }
+
+
+
+        public static void SetDescription(ItemType itemType, string description)
+        {
+            itemType.SetDescription(description);
+        }
+
+        internal void SetDescription(string description)
+        {
+            this.description = description;
+        }
+
+        public static void SetStackSize(ItemType itemType, int stackSize)
+        {
+            itemType.SetStackSize(stackSize);
+        }
+
+        internal void SetStackSize(int stackSize)
+        {
             this.stackSize = stackSize;
         }
 
+
+        public static void SetIcon(ItemType itemType, Texture2D icon)
+        {
+            itemType.SetIcon(icon);
+        }
+
+        private void SetIcon(Texture2D icon)
+        {
+            this.icon = icon;
+        }
+
+
+
+
         public static ItemType Empty()
         {
-            return new ItemType("Empty", 1);
+            return ItemType.CreateNew("Empty", 1);
         }
+
+
     }
 }

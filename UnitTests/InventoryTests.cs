@@ -2,11 +2,14 @@ using NUnit.Framework;
 using InventoryPackage;
 using System;
 using System.Diagnostics;
+using UnityEngine;
 
 namespace UnitTesting
 {
     internal class InventoryTests
     {
+
+
 
         public static string GetCurrentMethodName()
         {
@@ -54,7 +57,8 @@ namespace UnitTesting
         {
             int testSize = 5;
             Inventory inventory = InventoryBuilder.CreateInventory(testSize);
-            ItemAmount testItemAmount = new ItemAmount(new ItemType("testItemType",100), 10);
+            ItemType itemType = (ItemType)ScriptableObject.CreateInstance(typeof(ItemType));
+            ItemAmount testItemAmount = new ItemAmount(itemType, 10);
             InventoryHandler.AddToInventory(testItemAmount, inventory);
             ItemAmount lookup = LookupItemAmount(inventory, testItemAmount);
 
@@ -78,8 +82,8 @@ namespace UnitTesting
             Inventory inventory = InventoryBuilder.CreateInventory(testSize);
 
 
-            ItemType testType0 = new ItemType("testItemType1",100);
-            ItemType testType1 = new ItemType("testItemType2",100);
+            ItemType testType0 = ItemType.CreateNew("testItemType1",100);
+            ItemType testType1 = ItemType.CreateNew("testItemType2",100);
 
             ItemAmount testItemAmount0 = new ItemAmount(testType0,100);
             ItemAmount testItemAmount1 = new ItemAmount(testType1,100);
@@ -101,8 +105,8 @@ namespace UnitTesting
             Inventory inventory = InventoryBuilder.CreateInventory(testSize);
 
 
-            ItemType testType0 = new ItemType("testItemType1",100);
-            ItemType testType1 = new ItemType("testItemType2",100);
+            ItemType testType0 = ItemType.CreateNew("testItemType1",100);
+            ItemType testType1 = ItemType.CreateNew("testItemType2",100);
 
             ItemAmount testItemAmount0 = new ItemAmount(testType0,100);
             ItemAmount testItemAmount1 = new ItemAmount(testType1,100);
@@ -130,7 +134,7 @@ namespace UnitTesting
         {
             int testSize = 5;
             Inventory inventory = InventoryBuilder.CreateInventory(testSize);
-            ItemAmount testItemAmount = new ItemAmount(new ItemType("testItemType", 100), 10);
+            ItemAmount testItemAmount = new ItemAmount(ItemType.CreateNew("testItemType", 100), 10);
             InventoryHandler.AddToInventory(testItemAmount, inventory);
 
             ItemAmount lookupIfPresent = LookupItemAmount(inventory, testItemAmount);
@@ -157,7 +161,7 @@ namespace UnitTesting
 
             int testAmount = 10;
 
-            ItemType testItemType = new ItemType("testItemType",100);
+            ItemType testItemType = ItemType.CreateNew("testItemType",100);
             ItemAmount testItemAmount = new ItemAmount(testItemType, testAmount);
             InventoryHandler.AddToInventory(testItemAmount, inventory);
 
@@ -175,7 +179,7 @@ namespace UnitTesting
             int testAmount = 10;
             int testAmountEvaluated = 11;
 
-            ItemType testItemType = new ItemType("testItemType",100);
+            ItemType testItemType = ItemType.CreateNew("testItemType",100);
             ItemAmount testItemAmount = new ItemAmount(testItemType, testAmount);
             InventoryHandler.AddToInventory(testItemAmount, inventory);
 
@@ -189,7 +193,7 @@ namespace UnitTesting
             int testSize = 5;
             Inventory inventory = InventoryBuilder.CreateInventory(testSize);
 
-            ItemType testItemType = new ItemType("testItemType",100);
+            ItemType testItemType = ItemType.CreateNew("testItemType",100);
 
             ItemAmount testItemAmount = new ItemAmount(testItemType, 10);
             InventoryHandler.AddToInventory(testItemAmount, inventory);
