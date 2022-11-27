@@ -47,14 +47,22 @@ namespace InventoryPackage
 
             foreach (JSONObject obj in json.GetValueOrDefault("ItemTypes", json))
             {
-                string typeName = obj.GetValueOrDefault("name", obj);
-                int stackSize = obj.GetValueOrDefault("stack size", obj);
-                string description = obj.GetValueOrDefault("description", obj);
+                ItemType itemType = ReadItemType(obj);
 
-
-                itemTypes.Add(ItemType.CreateNew(typeName, stackSize, description));
+                itemTypes.Add(itemType);
             }
             return itemTypes.ToArray();
+        }
+
+        private static ItemType ReadItemType(JSONObject obj)
+        {
+            string typeName = obj.GetValueOrDefault("name", obj);
+            int stackSize = obj.GetValueOrDefault("stack size", obj);
+            string description = obj.GetValueOrDefault("description", obj);
+            string iconPath = obj.GetValueOrDefault("icon path", obj);
+
+            ItemType itemType = ItemType.CreateNew(typeName, stackSize, description, iconPath);
+            return itemType;
         }
 
         public static ItemLibrary CreateLibraryFromJSON(string path)
