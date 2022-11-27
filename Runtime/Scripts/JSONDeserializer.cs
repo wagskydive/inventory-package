@@ -13,6 +13,26 @@ namespace InventoryPackage
             return File.ReadAllText(path);
         }
 
+        public static int ReadJSONConfigDefaultStacksize(string jsonString)
+        {
+            JSONObject jsonObject = JSONObject.Parse(ReadJSON(jsonString)).AsObject;
+
+            return jsonObject["default stack size"];
+        }
+
+        public static string ReadJsonConfigDefaultDescription(string jsonString)
+        {
+            JSONObject jsonObject = JSONObject.Parse(ReadJSON(jsonString)).AsObject;
+
+            return jsonObject["default description"];
+        }
+
+        public static int ReadJsonConfigDefaultCharacterInventorySize(string jsonString)
+        {
+            JSONObject jsonObject = JSONObject.Parse(ReadJSON(jsonString)).AsObject;
+            return jsonObject["default character inventory size"];
+        }
+
         public static string ReadLibraryName(string path)
         {
             JSONObject library = JSONObject.Parse(ReadJSON(path)).AsObject;
