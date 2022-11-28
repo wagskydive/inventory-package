@@ -6,7 +6,6 @@ namespace InventoryPackage
         string TypeName  { get; }
         string Description { get; }
         Texture2D Icon { get; }
-
         int StackSize { get; }
     }
 }

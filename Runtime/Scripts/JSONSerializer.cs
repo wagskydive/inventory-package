@@ -53,7 +53,7 @@ namespace InventoryPackage
             json.Add("description", itemType.Description);
             if(itemType.ResourceFolderPath != null && itemType.ResourceFolderPath != "")
             {
-                 json.Add("icon path", itemType.ResourceFolderPath);
+                 json.Add("resource path", itemType.ResourceFolderPath);
             }
            
 

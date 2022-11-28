@@ -10,7 +10,12 @@ namespace InventoryPackage
     {
         public static string ReadJSON(string path)
         {
-            return File.ReadAllText(path);
+            string json = "";
+            if (File.Exists(path))
+            {
+                json = File.ReadAllText(path);
+            }
+            return json;
         }
 
         public static int ReadJSONConfigDefaultStacksize(string jsonString)
@@ -39,6 +44,12 @@ namespace InventoryPackage
             return library["LibraryName"];
         }
 
+        public static string ReadDefaultResourcePath(string path)
+        {
+            JSONObject library = JSONObject.Parse(ReadJSON(path)).AsObject;
+            return library["DefaultResourcePath"];
+        }
+
         public static ItemType[] ReadAllItemTypes(string path)
         {
             JSONObject json = JSONObject.Parse(ReadJSON(path)).AsObject;
@@ -59,9 +70,9 @@ namespace InventoryPackage
             string typeName = obj.GetValueOrDefault("name", obj);
             int stackSize = obj.GetValueOrDefault("stack size", obj);
             string description = obj.GetValueOrDefault("description", obj);
-            string iconPath = obj.GetValueOrDefault("icon path", obj);
+            string resourcePath = obj.GetValueOrDefault("resource path", obj);
 
-            ItemType itemType = ItemType.CreateNew(typeName, stackSize, description, iconPath);
+            ItemType itemType = ItemType.CreateNew(typeName, stackSize, description, resourcePath);
             return itemType;
         }
 

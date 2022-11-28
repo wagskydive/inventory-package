@@ -21,11 +21,11 @@ namespace InventoryPackage
 
         private Texture2D GetIcon()
         {
-            if (icon == null)
+            if (this.icon == null)
             {
-                icon = Resources.Load(resourceFolder+"/"+typeName+".png") as Texture2D;
+                ResourceLoader.LoadIcon(this,resourceFolder+"/"+typeName+".png");
             }
-            return icon;
+            return this.icon;
         }
 
 
@@ -90,7 +90,7 @@ namespace InventoryPackage
             resourceFolder = path;         
         }
 
-        public static void SetIconPath(ItemType itemType,string path)
+        public static void SetResourcePath(ItemType itemType,string path)
         {
             itemType.SetResourceFolder(path);
         }

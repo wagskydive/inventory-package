@@ -6,6 +6,8 @@ namespace InventoryPackage
 {
     public static class LibraryHandler
     {
+
+
         public static Inventory MakeCreativeMenu(ItemLibrary library)
         {
             Inventory inventory = InventoryBuilder.CreateInventory(library.AllItemTypes.Length);
@@ -93,7 +95,7 @@ namespace InventoryPackage
 
         public static void SetIconsPath(string path, ItemLibrary library)
         {
-            library.SetIconsPath(path);
+            library.SetDefaultResourcePath(path);
         }
 
         public static ItemType[] FilteredTypes(ItemLibrary library, ItemType[] excludedTypes)

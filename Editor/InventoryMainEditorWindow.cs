@@ -106,7 +106,7 @@ public class InventoryMainEditorWindow : EditorWindow
                 itemTypeEditorWindow.SetItemType(library.AllItemTypes[selected]);
             }
 
-            if (library.IconsPath == "")
+            if (library.DefaultResourcePath == "")
             {
                 if (GUILayout.Button(new GUIContent("Load icons from matching names in folder", "Load icons into Item types from matching names")))
                 {
@@ -220,7 +220,7 @@ public class InventoryMainEditorWindow : EditorWindow
                         }
 
                         LibraryHandler.SetIconsPath(resultPath, library);
-                        ItemType.SetIcon(itemType, (Texture2D)AssetDatabase.LoadAssetAtPath(library.IconsPath, typeof(Texture2D)));
+                        ItemType.SetIcon(itemType, (Texture2D)AssetDatabase.LoadAssetAtPath(library.DefaultResourcePath, typeof(Texture2D)));
                     }
 
                 }
