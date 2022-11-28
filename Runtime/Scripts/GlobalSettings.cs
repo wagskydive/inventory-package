@@ -1,26 +1,42 @@
 using System;
+using UnityEngine;
 
 namespace InventoryPackage
 {
     public static class GlobalSettings
     {
         public static string LibraryKeyword { get => GlobalSettings.GetLibraryKeyWord(); }
-        private static string GetLibraryKeyWord()
+        public static string DefaultDescription { get => GetDefaultDescription(); }
+        public static int DefaultStackSize { get => GetDefaultStackSize(); }
+
+        public static int DefaultCharacterInventorySize { get => GetDefaultCharacterInventorySize(); }
+
+        private static int GetDefaultCharacterInventorySize()
         {
-            return "ItemLibrary";
+            TextAsset asset = Resources.Load("inventory-package-configuration.json") as TextAsset;
+            return JSONDeserializer.ReadJsonConfigDefaultCharacterInventorySize(JSONDeserializer.ReadJSON(asset.text));
         }
 
-        public static string DefaultDescription { get => GetDefaultDescription(); }
+        private static string GetLibraryKeyWord()
+        {
+            TextAsset asset = Resources.Load("inventory-package-configuration.json") as TextAsset;
+
+            return "ItemLibrary";
+
+        }
+
+
         private static string GetDefaultDescription()
         {
             return "No description written.";
         }
 
-        public static int DefaultStackSize { get => GetDefaultStackSize(); }
+
 
         private static int GetDefaultStackSize()
         {
-            return 100;
+            TextAsset asset = Resources.Load("inventory-package-configuration.json") as TextAsset;
+            return JSONDeserializer.ReadJSONConfigDefaultStacksize(JSONDeserializer.ReadJSON(asset.text));
         }
     }
 }

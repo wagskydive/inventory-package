@@ -1,5 +1,6 @@
 {
     "keyword": "ItemLibrary",
     "default stack size": 100,
-    "default description": "No description written."
+    "default description": "No description written.",
+    "default character inventory size": 25
 }

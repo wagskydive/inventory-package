@@ -51,6 +51,11 @@ namespace InventoryPackage
             json.Add("name", itemType.TypeName);
             json.Add("stack size", itemType.StackSize);
             json.Add("description", itemType.Description);
+            if(itemType.ResourceFolderPath != null && itemType.ResourceFolderPath != "")
+            {
+                 json.Add("resource path", itemType.ResourceFolderPath);
+            }
+           
 
             return json;
         }
