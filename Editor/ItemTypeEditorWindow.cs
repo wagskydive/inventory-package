@@ -29,11 +29,18 @@ public class ItemTypeEditorWindow : EditorWindow
         GUILayout.Label("Description:");
         ItemType.SetDescription(itemType, GUILayout.TextField(itemType.Description));
         GUILayout.Space(20);
+
         GUILayout.Label("Resource Path:");
         ItemType.SetResourcePath(itemType, GUILayout.TextField(itemType.ResourceFolderPath));
         GUILayout.Space(20);
-        GUILayout.Label("Icon: ");
-        ItemType.SetIcon(itemType, (Texture2D)EditorGUILayout.ObjectField(itemType.Icon, typeof(Texture2D), false, GUILayout.Width(150), GUILayout.Height(150)));
+
+        string iconFileName = "";
+        if(itemType.Icon != null)
+        {
+            iconFileName = itemType.Icon.name;
+        }
+        GUILayout.Label("Icon: "+iconFileName);
+        EditorGUILayout.ObjectField(itemType.Icon, typeof(Texture2D), false, GUILayout.Width(150), GUILayout.Height(150));
 
 
 

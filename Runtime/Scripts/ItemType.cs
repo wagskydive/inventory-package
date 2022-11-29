@@ -6,6 +6,8 @@ namespace InventoryPackage
 {
     public class ItemType : ScriptableObject, IItemType
     {
+        public event Action<ItemType> OnResourceFolderSet;
+        public event Action<ItemType> OnItemTypeNameSet;
 
 
         public string TypeName { get => typeName; }
@@ -21,9 +23,9 @@ namespace InventoryPackage
 
         private Texture2D GetIcon()
         {
-            if (this.icon == null)
+            if ((this.icon == null && resourceFolder.Contains("Assets/") && resourceFolder.Contains("Resources")) || this.icon.name != typeName && resourceFolder.Contains("Assets/") && resourceFolder.Contains("Resources"))
             {
-                ResourceLoader.LoadIcon(this,resourceFolder+"/"+typeName+".png");
+                ResourceLoader.LoadIcon(this, resourceFolder + "/" + typeName + ".png");
             }
             return this.icon;
         }
@@ -37,10 +39,16 @@ namespace InventoryPackage
             itemType.SetStackSize(stackSize);
             itemType.SetResourceFolder(resourceFolder);
 
+            itemType.OnResourceFolderSet += UpdateResources;
+            itemType.OnItemTypeNameSet += UpdateResources;
+
             return itemType;
         }
 
-
+        private static void UpdateResources(ItemType itemType)
+        {
+            Texture2D icon = itemType.Icon;
+        }
 
         public static void SetTypeName(ItemType itemType, string typeName)
         {
@@ -50,6 +58,7 @@ namespace InventoryPackage
         internal void SetTypeName(string name)
         {
             this.typeName = name;
+            OnItemTypeNameSet?.Invoke(this);
         }
 
 
@@ -87,10 +96,11 @@ namespace InventoryPackage
 
         private void SetResourceFolder(string path)
         {
-            resourceFolder = path;         
+            resourceFolder = path;
+            OnResourceFolderSet?.Invoke(this);
         }
 
-        public static void SetResourcePath(ItemType itemType,string path)
+        public static void SetResourcePath(ItemType itemType, string path)
         {
             itemType.SetResourceFolder(path);
         }

@@ -34,9 +34,9 @@ namespace InventoryPackage
             this.allRecipes = recipes;
         }
 
-        internal void SetDefaultResourcePath(string iconsPath)
+        internal void SetDefaultResourcePath(string resourcePath)
         {
-            this.defaultResourcePath = iconsPath;
+            this.defaultResourcePath = resourcePath;
         }
 
         internal void AddItemType(ItemType itemType)
