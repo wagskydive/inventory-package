@@ -10,6 +10,7 @@ namespace InventoryPackage
         {
             JSONObject json = new JSONObject();
             json.Add("LibraryName", library.LibraryName);
+            json.Add("default resource path",library.DefaultResourcePath);
 
             if (library.AllItemTypes != null)
             {

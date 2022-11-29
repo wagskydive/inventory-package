@@ -47,7 +47,12 @@ namespace InventoryPackage
         public static string ReadDefaultResourcePath(string path)
         {
             JSONObject library = JSONObject.Parse(ReadJSON(path)).AsObject;
-            return library["DefaultResourcePath"];
+            string defaultResourcePath = library["DefaultResourcePath"];
+            if(defaultResourcePath != null)
+            {
+                return defaultResourcePath;
+            }
+            return "";
         }
 
         public static ItemType[] ReadAllItemTypes(string path)
@@ -82,6 +87,7 @@ namespace InventoryPackage
             string libraryName = json["LibraryName"];
             ItemType[] itemTypes = ReadAllItemTypes(path);
             ItemLibrary library = new ItemLibrary(libraryName, itemTypes);
+            //LibraryHandler.SetResourcePath(ReadDefaultResourcePath(json),library);
 
             Recipe[] allRecipes = ReadAllRecipes(path, library);
 

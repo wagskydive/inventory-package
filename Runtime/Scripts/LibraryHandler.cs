@@ -93,7 +93,7 @@ namespace InventoryPackage
 
         }
 
-        public static void SetIconsPath(string path, ItemLibrary library)
+        public static void SetResourcePath(string path, ItemLibrary library)
         {
             library.SetDefaultResourcePath(path);
         }
