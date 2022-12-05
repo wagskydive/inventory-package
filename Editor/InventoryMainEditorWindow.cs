@@ -130,7 +130,15 @@ public class InventoryMainEditorWindow : EditorWindow
                 itemTypeEditorWindow = GetWindow<ItemTypeEditorWindow>("Item Type Editor");
                 ItemType newItemType = ItemType.CreateNew("my new item type", 100, "no description written", library.DefaultResourcePath);
                 LibraryHandler.AddItemType(library, newItemType);
+                LibraryHandler.AddItemType(library, newItemType);
                 itemTypeEditorWindow.SetItemType(newItemType);
+            }
+
+            if (GUILayout.Button(new GUIContent("Remove Item Type", "remove an item type from the library")))
+            {
+                itemSelectionWindow = GetWindow<ItemSelectionEditorWindow>();
+                itemSelectionWindow.SetItems(library.AllItemTypes);
+                itemSelectionWindow.OnSelection += RemoveItemTypeFromLibrary;
             }
 
             GUILayout.Label("Recipes");
@@ -170,6 +178,10 @@ public class InventoryMainEditorWindow : EditorWindow
                 ItemType.SetResourcePath(itemType, library.DefaultResourcePath);
             }
         }
+    }
+    private void RemoveItemTypeFromLibrary(int index)
+    {
+        LibraryHandler.RemoveItemType(library, index);
     }
 
     private void CancelChanges()
