@@ -23,7 +23,7 @@ namespace InventoryPackage
 
         private Texture2D GetIcon()
         {
-            if ((this.icon == null && resourceFolder.Contains("Assets/") && resourceFolder.Contains("Resources")) || this.icon.name != typeName && resourceFolder.Contains("Assets/") && resourceFolder.Contains("Resources"))
+            if ((this.icon == null && resourceFolder.Contains("Assets/") && resourceFolder.Contains("Resources")) || this.icon != null && this.icon.name != typeName && resourceFolder.Contains("Assets/") && resourceFolder.Contains("Resources"))
             {
                 ResourceLoader.LoadIcon(this, resourceFolder + "/" + typeName + ".png");
             }
