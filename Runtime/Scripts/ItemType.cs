@@ -61,8 +61,6 @@ namespace InventoryPackage
             OnItemTypeNameSet?.Invoke(this);
         }
 
-
-
         public static void SetDescription(ItemType itemType, string description)
         {
             itemType.SetDescription(description);
