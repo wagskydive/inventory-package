@@ -83,7 +83,7 @@ namespace InventoryPackage
             {
                 json.Add("tool", recipe.ToolType.TypeName);
             }
-            json.Add("craft time", recipe.CraftingTime.ToString());
+            json.Add("craft time", recipe.CraftingTime);
             json.Add("output amount", recipe.Result.Amount);
             return json;
         }
