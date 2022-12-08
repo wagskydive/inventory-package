@@ -132,7 +132,15 @@ public class RecipeEditorWindow : EditorWindow
             craftingTime = EditorGUILayout.FloatField(craftingTime);
             if (craftingTime != currentRecipe.CraftingTime)
             {
-                RecipeCreator.SetCraftingTime(currentRecipe,craftingTime);
+                RecipeCreator.SetCraftingTime(currentRecipe, craftingTime);
+            }
+
+            GUILayout.Label("Output Amount");
+            int outputAmount = currentRecipe.Result.Amount;
+            outputAmount = EditorGUILayout.IntField(outputAmount);
+            if (outputAmount != currentRecipe.Result.Amount)
+            {
+                RecipeCreator.SetOutputAmount(currentRecipe, outputAmount);
             }
 
 
@@ -161,7 +169,7 @@ public class RecipeEditorWindow : EditorWindow
 
     private void SetToolType(int obj)
     {
-        RecipeCreator.SetToolType(currentRecipe,ValidItems()[obj]);
+        RecipeCreator.SetToolType(currentRecipe, ValidItems()[obj]);
         Repaint();
     }
 }

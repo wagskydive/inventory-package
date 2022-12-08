@@ -57,6 +57,11 @@ namespace InventoryPackage
                 }
             }
         }
+
+        internal void SetOutputAmount(int outputAmount)
+        {
+            this.result = new ItemAmount(this.result.Item, outputAmount);
+        }
     }
 }
 
