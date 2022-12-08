@@ -23,6 +23,8 @@ public class InventoryMainEditorWindow : EditorWindow
     static void ShowWindow()
     {
         GetWindow<InventoryMainEditorWindow>("Inventory Editor");
+
+
     }
 
     GameObject prefab;
@@ -45,6 +47,29 @@ public class InventoryMainEditorWindow : EditorWindow
         return buttons;
     }
 
+    private GUIContent[] MakeRecipeButtons(Recipe[] recipes)
+    {
+        GUIContent[] buttons = new GUIContent[recipes.Length];
+
+        for (int i = 0; i < recipes.Length; i++)
+        {
+            string recipeString = "";
+            if (recipes[i].Ingredients != null)
+            {
+                recipeString = "\nIngredients: ";
+                for (int j = 0; j < recipes[i].Ingredients.Slots.Length; j++)
+                {
+                    ItemAmount ingredient =  recipes[i].Ingredients.Slots[j];
+                    recipeString = recipeString + "\n      "+ingredient.Item.TypeName+": "+ingredient.Amount.ToString();
+                }
+            }
+            GUIContent buttonContent = new GUIContent(recipes[i].Result.Item.Icon, recipes[i].Result.Item.TypeName + recipeString);
+            buttons[i] = buttonContent;
+        }
+        return buttons;
+    }
+
+
     private void SetEditorIcons(ItemLibrary library)
     {
         int amountOfItems = library.AllItemTypes.Length;
@@ -61,14 +86,23 @@ public class InventoryMainEditorWindow : EditorWindow
     {
         int selected = -1;
         var height = slotSize * Mathf.CeilToInt(items.Length / (float)columns);
-
         selected = GUILayout.SelectionGrid(selected, MakeItemTypeButtons(items), columns, GUILayout.Width(slotSize * columns), GUILayout.Height(height));
         return selected;
     }
 
+    int RecipesGrid(Recipe[] recipes, int columns, int slotSize)
+    {
+        int selected = -1;
+        var height = slotSize * Mathf.CeilToInt(recipes.Length / (float)columns);
+        selected = GUILayout.SelectionGrid(selected, MakeRecipeButtons(recipes), columns, GUILayout.Width(slotSize * columns), GUILayout.Height(height));
+        return selected;
+    }
+
+
 
     void OnGUI()
     {
+        minSize = new Vector2(150, 150);
         GUILayout.BeginVertical();
 
         if (library == null)
@@ -96,7 +130,7 @@ public class InventoryMainEditorWindow : EditorWindow
 
             int selected = -1;
 
-            selected = ItemTypeGrid(library.AllItemTypes, 8, 32);
+            selected = ItemTypeGrid(library.AllItemTypes, 7, 64);
 
             if (selected != -1)
             {
@@ -144,7 +178,7 @@ public class InventoryMainEditorWindow : EditorWindow
             GUILayout.Label("Recipes");
             if (library.AllRecipes != null)
             {
-                int recipeSelection = ItemTypeGrid(LibraryHandler.RecipeResultTypes(library), 8, 32);
+                int recipeSelection = RecipesGrid(library.AllRecipes, 7, 64);
                 if (recipeSelection != -1)
                 {
                     recipeEditorWindow = GetWindow<RecipeEditorWindow>("Recipe Editor");
