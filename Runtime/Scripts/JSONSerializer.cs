@@ -10,6 +10,7 @@ namespace InventoryPackage
         {
             JSONObject json = new JSONObject();
             json.Add("LibraryName", library.LibraryName);
+            json.Add("default resource path",library.DefaultResourcePath);
 
             if (library.AllItemTypes != null)
             {
@@ -51,6 +52,11 @@ namespace InventoryPackage
             json.Add("name", itemType.TypeName);
             json.Add("stack size", itemType.StackSize);
             json.Add("description", itemType.Description);
+            if(itemType.ResourceFolderPath != null && itemType.ResourceFolderPath != "")
+            {
+                 json.Add("resource path", itemType.ResourceFolderPath);
+            }
+           
 
             return json;
         }
@@ -77,7 +83,7 @@ namespace InventoryPackage
             {
                 json.Add("tool", recipe.ToolType.TypeName);
             }
-            json.Add("craft time", recipe.CraftingTime.ToString());
+            json.Add("craft time", recipe.CraftingTime);
             json.Add("output amount", recipe.Result.Amount);
             return json;
         }

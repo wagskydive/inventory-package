@@ -47,6 +47,21 @@ namespace InventoryPackage
         {
             this.craftingTime = craftingTime;
         }
+        internal void RemoveIngredient(ItemType itemType)
+        {
+            for (int i = 0; i < this.ingredients.Slots.Length; i++)
+            {
+                if(this.ingredients.Slots[i].Item == itemType)
+                {
+                    this.ingredients.RemoveFromSlot(i);
+                }
+            }
+        }
+
+        internal void SetOutputAmount(int outputAmount)
+        {
+            this.result = new ItemAmount(this.result.Item, outputAmount);
+        }
     }
 }
 

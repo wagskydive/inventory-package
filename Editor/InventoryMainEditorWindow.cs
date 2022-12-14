@@ -23,6 +23,8 @@ public class InventoryMainEditorWindow : EditorWindow
     static void ShowWindow()
     {
         GetWindow<InventoryMainEditorWindow>("Inventory Editor");
+
+
     }
 
     GameObject prefab;
@@ -45,6 +47,29 @@ public class InventoryMainEditorWindow : EditorWindow
         return buttons;
     }
 
+    private GUIContent[] MakeRecipeButtons(Recipe[] recipes)
+    {
+        GUIContent[] buttons = new GUIContent[recipes.Length];
+
+        for (int i = 0; i < recipes.Length; i++)
+        {
+            string recipeString = "";
+            if (recipes[i].Ingredients != null)
+            {
+                recipeString = "\nIngredients: ";
+                for (int j = 0; j < recipes[i].Ingredients.Slots.Length; j++)
+                {
+                    ItemAmount ingredient =  recipes[i].Ingredients.Slots[j];
+                    recipeString = recipeString + "\n      "+ingredient.Item.TypeName+": "+ingredient.Amount.ToString();
+                }
+            }
+            GUIContent buttonContent = new GUIContent(recipes[i].Result.Item.Icon, recipes[i].Result.Item.TypeName + recipeString);
+            buttons[i] = buttonContent;
+        }
+        return buttons;
+    }
+
+
     private void SetEditorIcons(ItemLibrary library)
     {
         int amountOfItems = library.AllItemTypes.Length;
@@ -61,14 +86,23 @@ public class InventoryMainEditorWindow : EditorWindow
     {
         int selected = -1;
         var height = slotSize * Mathf.CeilToInt(items.Length / (float)columns);
-
         selected = GUILayout.SelectionGrid(selected, MakeItemTypeButtons(items), columns, GUILayout.Width(slotSize * columns), GUILayout.Height(height));
         return selected;
     }
 
+    int RecipesGrid(Recipe[] recipes, int columns, int slotSize)
+    {
+        int selected = -1;
+        var height = slotSize * Mathf.CeilToInt(recipes.Length / (float)columns);
+        selected = GUILayout.SelectionGrid(selected, MakeRecipeButtons(recipes), columns, GUILayout.Width(slotSize * columns), GUILayout.Height(height));
+        return selected;
+    }
+
+
 
     void OnGUI()
     {
+        minSize = new Vector2(150, 150);
         GUILayout.BeginVertical();
 
         if (library == null)
@@ -78,8 +112,6 @@ public class InventoryMainEditorWindow : EditorWindow
             {
                 path = EditorUtility.OpenFilePanel("Select Inventory json", "", "json");
                 ResetLibrary(JSONDeserializer.CreateLibraryFromJSON(path));
-                SetIcons(path);
-
             }
             GUILayout.Label("Or");
             prefab = (GameObject)EditorGUILayout.ObjectField("Prefab", prefab, typeof(GameObject), false);
@@ -98,7 +130,7 @@ public class InventoryMainEditorWindow : EditorWindow
 
             int selected = -1;
 
-            selected = ItemTypeGrid(library.AllItemTypes, 8, 32);
+            selected = ItemTypeGrid(library.AllItemTypes, 7, 64);
 
             if (selected != -1)
             {
@@ -106,11 +138,23 @@ public class InventoryMainEditorWindow : EditorWindow
                 itemTypeEditorWindow.SetItemType(library.AllItemTypes[selected]);
             }
 
-            if (library.IconsPath == "")
+            if (library.DefaultResourcePath == "")
             {
-                if (GUILayout.Button(new GUIContent("Load icons from matching names in folder", "Load icons into Item types from matching names")))
+                if (GUILayout.Button(new GUIContent("Set Resource folder", "Set the default folder where the resources are stored")))
                 {
-                    SetIcons(EditorUtility.OpenFolderPanel("Set Icon Folder", "", "ItemIcons"));
+                    string resourcePath = EditorUtility.OpenFolderPanel("Set Resource Folder", "", "resource folder");
+                    if (resourcePath.Contains("/Assets/") && resourcePath.Contains("/Resources/"))
+                    {
+                        resourcePath = resourcePath.Split("/Assets/")[1];
+                        resourcePath = "Assets/" + resourcePath;
+                        LibraryHandler.SetResourcePath(resourcePath, library);
+                        AddDefaultResourceFolderToItemTypes();
+                        Repaint();
+                    }
+                    else
+                    {
+                        EditorUtility.DisplayDialog("Warning", "The default Resource folder has to be inside the 'Assets' folder and a folder named 'Resources' needs to be present in the chosen path.", "ok");
+                    }
                 }
 
             }
@@ -118,15 +162,23 @@ public class InventoryMainEditorWindow : EditorWindow
             if (GUILayout.Button(new GUIContent("Add New Item Type", "Create a new item type")))
             {
                 itemTypeEditorWindow = GetWindow<ItemTypeEditorWindow>("Item Type Editor");
-                ItemType newItemType = ItemType.CreateNew("my new item type");
-                LibraryHandler.AddItemType(library,newItemType);
+                ItemType newItemType = ItemType.CreateNew("my new item type", 100, "no description written", library.DefaultResourcePath);
+                LibraryHandler.AddItemType(library, newItemType);
+                LibraryHandler.AddItemType(library, newItemType);
                 itemTypeEditorWindow.SetItemType(newItemType);
+            }
+
+            if (GUILayout.Button(new GUIContent("Remove Item Type", "remove an item type from the library")))
+            {
+                itemSelectionWindow = GetWindow<ItemSelectionEditorWindow>();
+                itemSelectionWindow.SetItems(library.AllItemTypes);
+                itemSelectionWindow.OnSelection += RemoveItemTypeFromLibrary;
             }
 
             GUILayout.Label("Recipes");
             if (library.AllRecipes != null)
             {
-                int recipeSelection = ItemTypeGrid(LibraryHandler.RecipeResultTypes(library), 8, 32);
+                int recipeSelection = RecipesGrid(library.AllRecipes, 7, 64);
                 if (recipeSelection != -1)
                 {
                     recipeEditorWindow = GetWindow<RecipeEditorWindow>("Recipe Editor");
@@ -150,10 +202,25 @@ public class InventoryMainEditorWindow : EditorWindow
         GUILayout.EndVertical();
     }
 
+    private void AddDefaultResourceFolderToItemTypes()
+    {
+        for (int i = 0; i < library.AllItemTypes.Length; i++)
+        {
+            ItemType itemType = library.AllItemTypes[i];
+            if (itemType.ResourceFolderPath == null || itemType.ResourceFolderPath == "")
+            {
+                ItemType.SetResourcePath(itemType, library.DefaultResourcePath);
+            }
+        }
+    }
+    private void RemoveItemTypeFromLibrary(int index)
+    {
+        LibraryHandler.RemoveItemType(library, index);
+    }
+
     private void CancelChanges()
     {
         ResetLibrary(JSONDeserializer.CreateLibraryFromJSON(path));
-        SetIcons(path);
     }
 
     private void SaveChanges(ItemLibrary library)
@@ -184,49 +251,6 @@ public class InventoryMainEditorWindow : EditorWindow
         itemSelectionWindow.OnSelection -= CreateNewRecipe;
     }
 
-    private void SetIcons(string iconsPath)
-    {
-
-        if (iconsPath != "")
-        {
-            if (iconsPath.EndsWith(".json"))
-            {
-                iconsPath = Path.GetDirectoryName(iconsPath);
-            }
-            DirectoryInfo dir = new DirectoryInfo(iconsPath);
-            FileInfo[] fileInfos = dir.GetFiles();
-            for (int i = 0; i < fileInfos.Length; i++)
-            {
-                if (fileInfos[i].Extension == ".png" || fileInfos[i].Extension == ".PNG")
-                {
-                    string itemTypeName = fileInfos[i].Name.ToString().Split('.')[0];
-                    ItemType itemType = LibraryHandler.GetItemTypeByName(itemTypeName, library);
-                    if (itemType != null && itemType.TypeName != "Empty")
-                    {
-                        string[] pathArray = fileInfos[i].FullName.Split("\\", StringSplitOptions.RemoveEmptyEntries);
-                        string resultPath = "";
-                        bool started = false;
-                        for (int j = 0; j < pathArray.Length; j++)
-                        {
-                            if (started)
-                            {
-                                resultPath = resultPath + "/" + pathArray[j];
-                            }
-                            if (pathArray[j] == "Assets")
-                            {
-                                started = true;
-                                resultPath = resultPath + pathArray[j];
-                            }
-                        }
-
-                        LibraryHandler.SetIconsPath(resultPath, library);
-                        ItemType.SetIcon(itemType, (Texture2D)AssetDatabase.LoadAssetAtPath(library.IconsPath, typeof(Texture2D)));
-                    }
-
-                }
-            }
-        }
-    }
 
     GUILayoutOption[] ObjectOptions()
     {

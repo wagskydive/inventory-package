@@ -72,6 +72,11 @@ namespace InventoryPackage
         {
             recipe.SetCraftingTime(craftingTime);
         }
+
+        public static void SetOutputAmount(Recipe recipe, int outputAmount)
+        {
+            recipe.SetOutputAmount(outputAmount);
+        }
     }
 }
 

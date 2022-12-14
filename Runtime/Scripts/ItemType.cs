@@ -1,37 +1,54 @@
 ﻿using System;
+using System.IO;
 using UnityEngine;
 
 namespace InventoryPackage
 {
     public class ItemType : ScriptableObject, IItemType
     {
+        public event Action<ItemType> OnResourceFolderSet;
+        public event Action<ItemType> OnItemTypeNameSet;
 
 
         public string TypeName { get => typeName; }
         [SerializeField] private string typeName;
-
         public string Description { get => description; }
         [SerializeField] private string description;
-
         public int StackSize { get => stackSize; }
         [SerializeField] private int stackSize;
-
-        public Texture2D Icon { get => icon; }
-
+        public Texture2D Icon { get => GetIcon(); }
         private Texture2D icon;
+        [SerializeField] private string resourceFolder;
+        public string ResourceFolderPath { get => resourceFolder; }
+
+        private Texture2D GetIcon()
+        {
+            if ((this.icon == null && resourceFolder.Contains("Assets/") && resourceFolder.Contains("Resources")) || this.icon != null && this.icon.name != typeName && resourceFolder.Contains("Assets/") && resourceFolder.Contains("Resources"))
+            {
+                ResourceLoader.LoadIcon(this, resourceFolder + "/" + typeName + ".png");
+            }
+            return this.icon;
+        }
 
 
-        public static ItemType CreateNew(string typeName, int stackSize = 100, string discription = "no description written.")
+        public static ItemType CreateNew(string typeName, int stackSize = 100, string discription = "no description written.", string resourceFolder = "")
         {
             ItemType itemType = (ItemType)ScriptableObject.CreateInstance(typeof(ItemType));
             itemType.SetTypeName(typeName);
             itemType.SetDescription(discription);
             itemType.SetStackSize(stackSize);
+            itemType.SetResourceFolder(resourceFolder);
+
+            itemType.OnResourceFolderSet += UpdateResources;
+            itemType.OnItemTypeNameSet += UpdateResources;
 
             return itemType;
         }
 
-
+        private static void UpdateResources(ItemType itemType)
+        {
+            Texture2D icon = itemType.Icon;
+        }
 
         public static void SetTypeName(ItemType itemType, string typeName)
         {
@@ -41,9 +58,8 @@ namespace InventoryPackage
         internal void SetTypeName(string name)
         {
             this.typeName = name;
+            OnItemTypeNameSet?.Invoke(this);
         }
-
-
 
         public static void SetDescription(ItemType itemType, string description)
         {
@@ -76,7 +92,16 @@ namespace InventoryPackage
             this.icon = icon;
         }
 
+        private void SetResourceFolder(string path)
+        {
+            resourceFolder = path;
+            OnResourceFolderSet?.Invoke(this);
+        }
 
+        public static void SetResourcePath(ItemType itemType, string path)
+        {
+            itemType.SetResourceFolder(path);
+        }
 
 
         public static ItemType Empty()

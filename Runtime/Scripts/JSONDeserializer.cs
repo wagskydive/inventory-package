@@ -10,13 +10,49 @@ namespace InventoryPackage
     {
         public static string ReadJSON(string path)
         {
-            return File.ReadAllText(path);
+            string json = "";
+            if (File.Exists(path))
+            {
+                json = File.ReadAllText(path);
+            }
+            return json;
+        }
+
+        public static int ReadJSONConfigDefaultStacksize(string jsonString)
+        {
+            JSONObject jsonObject = JSONObject.Parse(ReadJSON(jsonString)).AsObject;
+
+            return jsonObject["default stack size"];
+        }
+
+        public static string ReadJsonConfigDefaultDescription(string jsonString)
+        {
+            JSONObject jsonObject = JSONObject.Parse(ReadJSON(jsonString)).AsObject;
+
+            return jsonObject["default description"];
+        }
+
+        public static int ReadJsonConfigDefaultCharacterInventorySize(string jsonString)
+        {
+            JSONObject jsonObject = JSONObject.Parse(ReadJSON(jsonString)).AsObject;
+            return jsonObject["default character inventory size"];
         }
 
         public static string ReadLibraryName(string path)
         {
             JSONObject library = JSONObject.Parse(ReadJSON(path)).AsObject;
             return library["LibraryName"];
+        }
+
+        public static string ReadDefaultResourcePath(string path)
+        {
+            JSONObject library = JSONObject.Parse(ReadJSON(path)).AsObject;
+            string defaultResourcePath = library["DefaultResourcePath"];
+            if(defaultResourcePath != null)
+            {
+                return defaultResourcePath;
+            }
+            return "";
         }
 
         public static ItemType[] ReadAllItemTypes(string path)
@@ -27,14 +63,22 @@ namespace InventoryPackage
 
             foreach (JSONObject obj in json.GetValueOrDefault("ItemTypes", json))
             {
-                string typeName = obj.GetValueOrDefault("name", obj);
-                int stackSize = obj.GetValueOrDefault("stack size", obj);
-                string description = obj.GetValueOrDefault("description", obj);
+                ItemType itemType = ReadItemType(obj);
 
-
-                itemTypes.Add(ItemType.CreateNew(typeName, stackSize, description));
+                itemTypes.Add(itemType);
             }
             return itemTypes.ToArray();
+        }
+
+        private static ItemType ReadItemType(JSONObject obj)
+        {
+            string typeName = obj.GetValueOrDefault("name", obj);
+            int stackSize = obj.GetValueOrDefault("stack size", obj);
+            string description = obj.GetValueOrDefault("description", obj);
+            string resourcePath = obj.GetValueOrDefault("resource path", obj);
+
+            ItemType itemType = ItemType.CreateNew(typeName, stackSize, description, resourcePath);
+            return itemType;
         }
 
         public static ItemLibrary CreateLibraryFromJSON(string path)
@@ -43,6 +87,7 @@ namespace InventoryPackage
             string libraryName = json["LibraryName"];
             ItemType[] itemTypes = ReadAllItemTypes(path);
             ItemLibrary library = new ItemLibrary(libraryName, itemTypes);
+            //LibraryHandler.SetResourcePath(ReadDefaultResourcePath(json),library);
 
             Recipe[] allRecipes = ReadAllRecipes(path, library);
 

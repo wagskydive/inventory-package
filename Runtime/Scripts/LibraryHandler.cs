@@ -6,6 +6,8 @@ namespace InventoryPackage
 {
     public static class LibraryHandler
     {
+
+
         public static Inventory MakeCreativeMenu(ItemLibrary library)
         {
             Inventory inventory = InventoryBuilder.CreateInventory(library.AllItemTypes.Length);
@@ -91,9 +93,9 @@ namespace InventoryPackage
 
         }
 
-        public static void SetIconsPath(string path, ItemLibrary library)
+        public static void SetResourcePath(string path, ItemLibrary library)
         {
-            library.SetIconsPath(path);
+            library.SetDefaultResourcePath(path);
         }
 
         public static ItemType[] FilteredTypes(ItemLibrary library, ItemType[] excludedTypes)
@@ -124,10 +126,20 @@ namespace InventoryPackage
                 recipes = new Recipe[1];
                 recipes[0] = recipe;
             }
-
-
-
             library.ReplaceRecipes(recipes);
+        }
+
+        public static void RemoveRecipe(ItemLibrary library, Recipe recipe)
+        {           
+            if(library.AllRecipes != null)
+            {
+                List<Recipe> recipesList = library.AllRecipes.ToList();
+                if(recipesList.Contains(recipe))
+                {
+                    recipesList.Remove(recipe);
+                    library.ReplaceRecipes(recipesList.ToArray());
+                }
+            }
         }
 
         public static ItemLibrary CreateNewLibrary(string libraryName, ItemType[] itemTypes)
@@ -138,6 +150,11 @@ namespace InventoryPackage
         public static void AddItemType(ItemLibrary library,  ItemType newItemType)
         {
             library.AddItemType(newItemType);
+        }
+
+        public static void RemoveItemType(ItemLibrary library, int index)
+        {
+            library.RemoveItemType(index);
         }
     }
 }
