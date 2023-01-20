@@ -97,5 +97,36 @@ namespace UnitTesting
                 }
             }
         }
+
+        [Test]
+        public void TestIfLibraryHandlerCanCalculateRawIngredients()
+        {
+            // Load Library
+            // This Library contains a recipe for apple cake that has 30 flour as one of its ingredients
+            // Flour is made from 100 grain so the raw ingredients should contain 3000 grain and no flour      
+
+            ItemLibrary library = LibraryHandler.LoadLibrary(testFolderPath + "/TestItemLibrary.json");
+
+            // Get Item Type Grain
+            ItemType grain =  LibraryHandler.GetItemTypeByName("grain", library);
+
+            // Get ItemType Flour
+            ItemType flour =  LibraryHandler.GetItemTypeByName("flour", library);
+
+            foreach (Recipe recipe in library.AllRecipes)
+            {
+                if (recipe.Result.Item.TypeName == "apple cake")
+                {
+                    Inventory rawIngredients =  LibraryHandler.GetRawIngredientsOfRecipe(recipe,library);
+                    Assert.That(!InventoryHandler.HasAmountOfItem(flour, 30, rawIngredients));
+                    UnityEngine.Debug.Log(InventoryHandler.GetAmountOfItem(grain, rawIngredients));
+                    Assert.That(InventoryHandler.HasAmountOfItem(grain, 300, rawIngredients));
+                    break;
+                }
+            }
+            
+
+
+        }
     }
 }
