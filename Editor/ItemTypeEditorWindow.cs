@@ -57,7 +57,7 @@ public class ItemTypeEditorWindow : EditorWindow
 
     }
 
-    public void SetItemTypeAndLibrary(ItemLibrary itemLibrary, ItemType itemType)
+    public void SetLibraryAndItemType(ItemLibrary itemLibrary, ItemType itemType)
     {
         this.itemType = itemType;
         this.itemLibrary = itemLibrary;

@@ -140,7 +140,7 @@ public class InventoryMainEditorWindow : EditorWindow
             if (selected != -1)
             {
                 itemTypeEditorWindow = GetWindow<ItemTypeEditorWindow>("Item Type Editor");
-                itemTypeEditorWindow.SetItemTypeAndLibrary(library, library.AllItemTypes[selected]);
+                itemTypeEditorWindow.SetLibraryAndItemType(library, library.AllItemTypes[selected]);
             }
 
             if (library.DefaultResourcePath == "")
@@ -170,7 +170,7 @@ public class InventoryMainEditorWindow : EditorWindow
                 ItemType newItemType = ItemType.CreateNew("my new item type", 100, "no description written", library.DefaultResourcePath);
                 LibraryHandler.AddItemType(library, newItemType);
                 LibraryHandler.AddItemType(library, newItemType);
-                itemTypeEditorWindow.SetItemTypeAndLibrary(library,newItemType);
+                itemTypeEditorWindow.SetLibraryAndItemType(library,newItemType);
             }
 
             if (GUILayout.Button(new GUIContent("Remove Item Type", "remove an item type from the library")))

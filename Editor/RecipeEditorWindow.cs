@@ -39,7 +39,10 @@ public class RecipeEditorWindow : EditorWindow
 
         }
         GUIContent buttonContent = new GUIContent(itemAmount.Item.Icon, itemAmount.Item.TypeName);
-        GUILayout.Button(buttonContent, GUILayout.Width(32), GUILayout.Height(32));
+        if(GUILayout.Button(buttonContent, GUILayout.Width(32), GUILayout.Height(32)))
+        {
+            GetWindow<ItemTypeEditorWindow>("ItemType Editor").SetLibraryAndItemType(library,itemAmount.Item);
+        }
         GUILayout.Label(itemAmount.Item.TypeName);
 
         RemoveIngredientButton(index);
