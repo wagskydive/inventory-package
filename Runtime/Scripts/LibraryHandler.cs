@@ -130,11 +130,11 @@ namespace InventoryPackage
         }
 
         public static void RemoveRecipe(ItemLibrary library, Recipe recipe)
-        {           
-            if(library.AllRecipes != null)
+        {
+            if (library.AllRecipes != null)
             {
                 List<Recipe> recipesList = library.AllRecipes.ToList();
-                if(recipesList.Contains(recipe))
+                if (recipesList.Contains(recipe))
                 {
                     recipesList.Remove(recipe);
                     library.ReplaceRecipes(recipesList.ToArray());
@@ -147,7 +147,7 @@ namespace InventoryPackage
             return new ItemLibrary(libraryName, itemTypes);
         }
 
-        public static void AddItemType(ItemLibrary library,  ItemType newItemType)
+        public static void AddItemType(ItemLibrary library, ItemType newItemType)
         {
             library.AddItemType(newItemType);
         }
@@ -156,5 +156,43 @@ namespace InventoryPackage
         {
             library.RemoveItemType(index);
         }
+
+        public static Inventory GetRawIngredientsOfRecipe(Recipe recipe, ItemLibrary library)
+        {
+            ItemAmount[] recipeResults = RecipeResults(library);
+            string[] recipeResultNames = RecipesResultTypes(library);
+            Inventory finalInventory = InventoryBuilder.CreateInventory(999);
+
+            for (int i = 0; i < recipe.Ingredients.Slots.Length; i++)
+            {
+                ItemAmount ingredient = recipe.Ingredients.Slots[i];
+                if (recipeResultNames.Contains(ingredient.Item.TypeName))
+                {
+                    for (int j = 0; j < recipeResults.Length; j++)
+                    {
+                        if (recipeResults[j].Item == ingredient.Item)
+                        {
+                            int recipeRuns = (int)Mathf.Ceil(ingredient.Amount / recipeResults[j].Amount);
+
+                            
+                            for (int k = 0; k < recipeRuns; k++)
+                            {
+                                InventoryHandler.AddToInventory(GetRawIngredientsOfRecipe(library.AllRecipes[j], library), finalInventory);
+                            }
+                            
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    InventoryHandler.AddToInventory(ingredient, finalInventory);
+                }
+            }
+
+            return finalInventory;
+        }
+
+
     }
 }

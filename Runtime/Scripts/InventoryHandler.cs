@@ -8,7 +8,7 @@ namespace InventoryPackage
     {
         public static void AddToInventory(ItemAmount amountLeft, Inventory inventory)
         {
-            if (HasAmountOfItem(amountLeft.Item, 1, inventory))
+            if (HasSlotWithItemWithSpace(amountLeft.Item, inventory))
             {
                 int[] slotsWithItemType = GetSlotsWithItemType(amountLeft.Item, inventory);
 
@@ -19,6 +19,13 @@ namespace InventoryPackage
                     if (amountLeft.Item.TypeName == ItemType.Empty().TypeName)
                     {
                         break;
+                    }
+                    else
+                    {
+                        if(HasEmptySlot(inventory))
+                        {
+                            inventory.AddInEmptySlot(amountLeft, GetNextEmptySlot(inventory));
+                        }
                     }
                 }
             }
@@ -31,6 +38,29 @@ namespace InventoryPackage
             }
         }
 
+        private static bool HasSlotWithItemWithSpace(ItemType item, Inventory inventory)
+        {
+            for(int i = 0; i < inventory.Slots.Length; i++) 
+            {
+                if(inventory.Slots[i].Item == item && inventory.Slots[i].Amount < item.StackSize)
+                {
+                    return true;
+                }   
+            }
+            return false;
+        }
+
+        public static void AddToInventory(Inventory toAdd, Inventory toRecieve)
+        {
+            foreach (ItemAmount itemAmount in toAdd.Slots)
+            {
+                if (itemAmount.Item.TypeName != ItemType.Empty().TypeName)
+                {
+                    InventoryHandler.AddToInventory(itemAmount, toRecieve);
+                }
+
+            }
+        }
 
 
         public static bool HasEmptySlot(Inventory inventory)
@@ -130,5 +160,17 @@ namespace InventoryPackage
             }
         }
 
+        public static object GetAmountOfItem(ItemType itemType, Inventory inventory)
+        {
+            int amount = 0;
+            for (int i = 0; i < inventory.Slots.Length; i++)
+            {
+                if (inventory.Slots[i].Item == itemType)
+                {
+                    amount += inventory.Slots[i].Amount;
+                }
+            }
+            return amount;
+        }
     }
 }
