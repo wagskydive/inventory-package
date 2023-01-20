@@ -1,18 +1,19 @@
 namespace InventoryPackage
 {
+
     public class ItemAmount
     {
+        public ItemType Item { get; private set; }
+        public int Amount { get; private set; }
         public ItemAmount(ItemType type, int amount)
         {
             Item = type;
             Amount = amount;
         }
-        public ItemType Item {get; private set;}
-        public int Amount {get; private set;}
 
         public void RemoveAmount(int amount, out ItemAmount AmountLeft)
-        {            
-            if(amount > Amount)
+        {
+            if (amount > Amount)
             {
                 AmountLeft = new ItemAmount(Item, amount - Amount);
             }
@@ -33,17 +34,17 @@ namespace InventoryPackage
         {
             amountLeft = Empty();
             int newAmount = Amount + amount;
-            if(newAmount > Item.StackSize)
-            {                
-                amountLeft = new ItemAmount(Item, amount-Amount);
+            if (newAmount > Item.StackSize)
+            {
+                amountLeft = new ItemAmount(Item, amount - Amount);
                 newAmount = Item.StackSize;
             }
-            Amount = newAmount;            
+            Amount = newAmount;
         }
 
         public static ItemAmount Empty()
         {
-            return new ItemAmount(ItemType.Empty(),0);
+            return new ItemAmount(ItemType.Empty(), 0);
         }
 
         public void SetAmount(int amount)
@@ -52,8 +53,8 @@ namespace InventoryPackage
         }
     }
 }
-    
-        
+
+
 
 
 

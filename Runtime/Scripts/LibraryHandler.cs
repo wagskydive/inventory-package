@@ -165,7 +165,7 @@ namespace InventoryPackage
 
             for (int i = 0; i < recipe.Ingredients.Slots.Length; i++)
             {
-                ItemAmount ingredient = recipe.Ingredients.Slots[i];
+                ItemAmount ingredient = new ItemAmount(recipe.Ingredients.Slots[i].Item, recipe.Ingredients.Slots[i].Amount);
                 if (recipeResultNames.Contains(ingredient.Item.TypeName))
                 {
                     for (int j = 0; j < recipeResults.Length; j++)
