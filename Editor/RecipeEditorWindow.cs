@@ -6,6 +6,7 @@ using InventoryPackage;
 using UnityEngine.UIElements;
 using UnityEditor.UIElements;
 using System;
+using System.Linq;
 
 public class RecipeEditorWindow : EditorWindow
 {
@@ -56,6 +57,17 @@ public class RecipeEditorWindow : EditorWindow
                 invalidItemsForRecipe.Add(currentRecipe.Ingredients.Slots[i].Item);
             }
         }
+        for (int i = 0; i < library.AllRecipes.Length; i++)
+        {
+            for (int j = 0; j < library.AllRecipes[i].Ingredients.Slots.Length; j++)
+            {
+                if (library.AllRecipes[i].Ingredients.Slots[j].Item == currentRecipe.Result.Item)
+                {
+                    invalidItemsForRecipe.Add(library.AllRecipes[i].Result.Item);
+                }
+            }
+        }
+
         return LibraryHandler.FilteredTypes(library, invalidItemsForRecipe.ToArray());
 
     }
@@ -112,6 +124,7 @@ public class RecipeEditorWindow : EditorWindow
             GUILayout.EndVertical();
 
             GUILayout.BeginVertical();
+            GUILayout.Label("Ingredients");
             if (currentRecipe.Ingredients != null)
             {
                 for (int i = 0; i < currentRecipe.Ingredients.Slots.Length; i++)
@@ -164,6 +177,13 @@ public class RecipeEditorWindow : EditorWindow
             }
 
 
+            GUILayout.Label("Raw Ingredients");
+            GUIContent rawIngedientButtonContent = new GUIContent("show");
+            if (GUILayout.Button(rawIngedientButtonContent, GUILayout.Width(32), GUILayout.Height(32)))
+            {
+                InventoryListViewWindow inventoryListViewWindow = GetWindow<InventoryListViewWindow>();
+                inventoryListViewWindow.SetInventory(LibraryHandler.GetRawIngredientsOfRecipe(currentRecipe, library));
+            }
         }
     }
 
