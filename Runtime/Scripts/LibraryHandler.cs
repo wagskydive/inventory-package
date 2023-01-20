@@ -174,12 +174,12 @@ namespace InventoryPackage
                         {
                             int recipeRuns = (int)Mathf.Ceil(ingredient.Amount / recipeResults[j].Amount);
 
-                            
+
                             for (int k = 0; k < recipeRuns; k++)
                             {
                                 InventoryHandler.AddToInventory(GetRawIngredientsOfRecipe(library.AllRecipes[j], library), finalInventory);
                             }
-                            
+
                             break;
                         }
                     }
@@ -193,6 +193,28 @@ namespace InventoryPackage
             return finalInventory;
         }
 
+        public static bool IsRawIngredient(ItemType itemType, ItemLibrary itemLibrary)
+        {
+            for (int i = 0; i < itemLibrary.AllRecipes.Length; i++)
+            {
+                if (itemLibrary.AllRecipes[i].Result.Item == itemType)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
 
+        public static Recipe GetRecipe(ItemType itemType, ItemLibrary itemLibrary)
+        {
+            for (int i = 0; i < itemLibrary.AllRecipes.Length; i++)
+            {
+                if (itemLibrary.AllRecipes[i].Result.Item == itemType)
+                {
+                    return itemLibrary.AllRecipes[i];
+                }
+            }
+            return null;
+        }
     }
 }
