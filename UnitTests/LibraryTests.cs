@@ -3,7 +3,6 @@ using InventoryPackage;
 using System;
 using System.Diagnostics;
 using UnityEngine;
-using FluentAssertions;
 
 namespace UnitTesting
 {

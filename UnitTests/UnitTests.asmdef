@@ -4,8 +4,7 @@
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
-        "InventoryPackage",
-        "BoundfoxStudios.FluentAssertions"
+        "InventoryPackage"
     ],
     "includePlatforms": [
         "Editor"
