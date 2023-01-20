@@ -53,22 +53,27 @@ public class InventoryMainEditorWindow : EditorWindow
 
         for (int i = 0; i < recipes.Length; i++)
         {
-            string recipeString = "";
-            if (recipes[i].Ingredients != null)
-            {
-                recipeString = "\nIngredients: ";
-                for (int j = 0; j < recipes[i].Ingredients.Slots.Length; j++)
-                {
-                    ItemAmount ingredient =  recipes[i].Ingredients.Slots[j];
-                    recipeString = recipeString + "\n      "+ingredient.Item.TypeName+": "+ingredient.Amount.ToString();
-                }
-            }
-            GUIContent buttonContent = new GUIContent(recipes[i].Result.Item.Icon, recipes[i].Result.Item.TypeName + recipeString);
+            Recipe recipe = recipes[i];
+            GUIContent buttonContent = new GUIContent(recipes[i].Result.Item.Icon, recipes[i].Result.Item.TypeName + IngredientsString(recipe));
             buttons[i] = buttonContent;
         }
         return buttons;
     }
 
+    private static string IngredientsString(Recipe recipe)
+    {
+        string recipeString = "";
+        if (recipe.Ingredients != null)
+        {
+            recipeString = "\nIngredients: ";
+            for (int j = 0; j < recipe.Ingredients.Slots.Length; j++)
+            {
+                ItemAmount ingredient = recipe.Ingredients.Slots[j];
+                recipeString = recipeString + "\n      " + ingredient.Item.TypeName + ": " + ingredient.Amount.ToString();
+            }
+        }
+        return recipeString;
+    }
 
     private void SetEditorIcons(ItemLibrary library)
     {
@@ -135,7 +140,7 @@ public class InventoryMainEditorWindow : EditorWindow
             if (selected != -1)
             {
                 itemTypeEditorWindow = GetWindow<ItemTypeEditorWindow>("Item Type Editor");
-                itemTypeEditorWindow.SetItemType(library.AllItemTypes[selected]);
+                itemTypeEditorWindow.SetItemTypeAndLibrary(library, library.AllItemTypes[selected]);
             }
 
             if (library.DefaultResourcePath == "")
@@ -165,7 +170,7 @@ public class InventoryMainEditorWindow : EditorWindow
                 ItemType newItemType = ItemType.CreateNew("my new item type", 100, "no description written", library.DefaultResourcePath);
                 LibraryHandler.AddItemType(library, newItemType);
                 LibraryHandler.AddItemType(library, newItemType);
-                itemTypeEditorWindow.SetItemType(newItemType);
+                itemTypeEditorWindow.SetItemTypeAndLibrary(library,newItemType);
             }
 
             if (GUILayout.Button(new GUIContent("Remove Item Type", "remove an item type from the library")))
