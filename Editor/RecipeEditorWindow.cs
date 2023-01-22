@@ -39,9 +39,9 @@ public class RecipeEditorWindow : EditorWindow
 
         }
         GUIContent buttonContent = new GUIContent(itemAmount.Item.Icon, itemAmount.Item.TypeName);
-        if(GUILayout.Button(buttonContent, GUILayout.Width(32), GUILayout.Height(32)))
+        if (GUILayout.Button(buttonContent, GUILayout.Width(32), GUILayout.Height(32)))
         {
-            GetWindow<ItemTypeEditorWindow>("ItemType Editor").SetLibraryAndItemType(library,itemAmount.Item);
+            GetWindow<ItemTypeEditorWindow>("ItemType Editor").SetLibraryAndItemType(library, itemAmount.Item);
         }
         GUILayout.Label(itemAmount.Item.TypeName);
 
@@ -62,13 +62,18 @@ public class RecipeEditorWindow : EditorWindow
         }
         for (int i = 0; i < library.AllRecipes.Length; i++)
         {
-            for (int j = 0; j < library.AllRecipes[i].Ingredients.Slots.Length; j++)
+            Inventory recipeIngredients = library.AllRecipes[i].Ingredients;
+            if (recipeIngredients != null)
             {
-                if (library.AllRecipes[i].Ingredients.Slots[j].Item == currentRecipe.Result.Item)
+                for (int j = 0; j < recipeIngredients.Slots.Length; j++)
                 {
-                    invalidItemsForRecipe.Add(library.AllRecipes[i].Result.Item);
+                    if (recipeIngredients.Slots[j].Item == currentRecipe.Result.Item)
+                    {
+                        invalidItemsForRecipe.Add(library.AllRecipes[i].Result.Item);
+                    }
                 }
             }
+
         }
 
         return LibraryHandler.FilteredTypes(library, invalidItemsForRecipe.ToArray());
@@ -187,6 +192,15 @@ public class RecipeEditorWindow : EditorWindow
                 InventoryListViewWindow inventoryListViewWindow = GetWindow<InventoryListViewWindow>();
                 inventoryListViewWindow.SetInventory(LibraryHandler.GetRawIngredientsOfRecipe(currentRecipe, library));
             }
+
+            GUILayout.Label("Delete recipe");
+            GUIContent content = EditorGUIUtility.IconContent("P4_DeletedLocal@2x");
+            if (GUILayout.Button(content, GUILayout.Width(32), GUILayout.Height(32)))
+            {
+                LibraryHandler.RemoveRecipe(library, currentRecipe);
+                Close();
+            }
+
         }
     }
 
