@@ -12,11 +12,11 @@ namespace InventoryPackage
         public string LibraryName { get => libraryName; }
 
         [SerializeField]
-        private ItemType[] allItemTypes;
+        internal ItemType[] allItemTypes;
         public ItemType[] AllItemTypes { get => allItemTypes; }
 
         [SerializeField]
-        private Recipe[] allRecipes;
+        internal Recipe[] allRecipes;
         public Recipe[] AllRecipes { get => allRecipes; }
 
 
@@ -41,47 +41,6 @@ namespace InventoryPackage
             this.defaultResourcePath = resourcePath;
         }
 
-        internal void AddItemType(ItemType itemType)
-        {
-            Array.Resize(ref allItemTypes, allItemTypes.Length + 1);
-            allItemTypes[allItemTypes.Length - 1] = itemType;
-        }
 
-        internal void RemoveItemType(int index)
-        {
-            RemoveFromRecipes(allItemTypes[index]);
-
-            List<ItemType> itemTypes = allItemTypes.ToList();
-            itemTypes.RemoveAt(index);
-            allItemTypes = itemTypes.ToArray();
-        }
-
-        private void RemoveFromRecipes(ItemType itemType)
-        {
-            for (int i = 0; i < allRecipes.Length; i++)
-            {
-                if(allRecipes[i].Result.Item == itemType)
-                {
-                    RemoveRecipe(allRecipes[i]);
-                }
-                for(int j = 0; j < allRecipes[i].Ingredients.Slots.Length; j++)
-                {
-                    if(allRecipes[i].Ingredients.Slots[j].Item == itemType)
-                    {
-                        allRecipes[i].RemoveIngredient(itemType);
-                    }
-                }
-            }
-        }
-
-        private void RemoveRecipe(Recipe recipe)
-        {
-            List<Recipe> recipesList = allRecipes.ToList();
-            if(recipesList.Contains(recipe))
-            {
-                recipesList.Remove(recipe);
-            }
-            ReplaceRecipes(recipesList.ToArray());         
-        }
     }
 }

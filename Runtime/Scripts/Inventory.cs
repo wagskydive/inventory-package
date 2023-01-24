@@ -1,3 +1,7 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
 namespace InventoryPackage
 { 
     public class Inventory
@@ -48,7 +52,12 @@ namespace InventoryPackage
 
         }
 
-       
+        internal void RemoveSlot(int i)
+        {
+            List<ItemAmount> slots = Slots.ToList();
+            slots.RemoveAt(i);
+            Slots = slots.ToArray();
+        }
     }
 
 

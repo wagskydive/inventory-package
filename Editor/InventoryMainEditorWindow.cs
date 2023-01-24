@@ -168,8 +168,7 @@ public class InventoryMainEditorWindow : EditorWindow
             {
                 itemTypeEditorWindow = GetWindow<ItemTypeEditorWindow>("Item Type Editor");
                 ItemType newItemType = ItemType.CreateNew("my new item type", 100, "no description written", library.DefaultResourcePath);
-                LibraryHandler.AddItemType(library, newItemType);
-                LibraryHandler.AddItemType(library, newItemType);
+                LibraryHandler.AddItemType(newItemType,library);
                 itemTypeEditorWindow.SetLibraryAndItemType(library,newItemType);
             }
 

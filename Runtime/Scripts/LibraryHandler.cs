@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -147,20 +148,51 @@ namespace InventoryPackage
             return new ItemLibrary(libraryName, itemTypes);
         }
 
-        public static void AddItemType(ItemLibrary library, ItemType newItemType)
-        {
-            library.AddItemType(newItemType);
-        }
 
         public static void RemoveItemType(ItemLibrary library, int index)
         {
             ItemType itemType = library.AllItemTypes[index];
-            if(!LibraryHandler.IsRawIngredient(itemType, library))
+            for (int i = 0; i < library.AllRecipes.Length; i++)
+            {
+
+                for (int j = 0; j < library.AllRecipes[i].Ingredients.Slots.Length; j++)
+                {
+                    ItemAmount slot = library.AllRecipes[i].Ingredients.Slots[j];
+
+                    if (slot.Item == itemType)
+                    {
+                        RecipeCreator.RemoveIngredient(library.AllRecipes[i], j);
+                    }
+                }
+            }
+            if (!LibraryHandler.IsRawIngredient(itemType, library))
             {
                 Recipe recipe = LibraryHandler.GetRecipe(itemType, library);
-                RemoveRecipe(library,recipe);
+                RemoveRecipe(library, recipe);
             }
-            library.RemoveItemType(index);
+            List<ItemType> itemTypes = library.AllItemTypes.ToList();
+            itemTypes.RemoveAt(index);
+            library.allItemTypes = itemTypes.ToArray();
+        }
+
+
+
+        public static void AddItemType(ItemType itemType, ItemLibrary library)
+        {
+            Array.Resize(ref library.allItemTypes, library.allItemTypes.Length + 1);
+            library.allItemTypes[library.allItemTypes.Length - 1] = itemType;
+        }
+
+
+
+        internal static void RemoveRecipe(Recipe recipe, ItemLibrary library)
+        {
+            List<Recipe> recipesList = library.allRecipes.ToList();
+            if (recipesList.Contains(recipe))
+            {
+                recipesList.Remove(recipe);
+            }
+            library.ReplaceRecipes(recipesList.ToArray());
         }
 
         public static Inventory GetRawIngredientsOfRecipe(Recipe recipe, ItemLibrary library)
