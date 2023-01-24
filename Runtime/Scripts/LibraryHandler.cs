@@ -154,6 +154,12 @@ namespace InventoryPackage
 
         public static void RemoveItemType(ItemLibrary library, int index)
         {
+            ItemType itemType = library.AllItemTypes[index];
+            if(!LibraryHandler.IsRawIngredient(itemType, library))
+            {
+                Recipe recipe = LibraryHandler.GetRecipe(itemType, library);
+                RemoveRecipe(library,recipe);
+            }
             library.RemoveItemType(index);
         }
 
