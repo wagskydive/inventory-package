@@ -71,11 +71,11 @@ namespace UnitTesting
 
             ItemType type = library.AllItemTypes[indexToRemove];
 
-            LibraryHandler.RemoveItemType(library,indexToRemove);
+            LibraryHandler.RemoveItemType(library, indexToRemove);
 
 
             // assert that itemtype doesnt still exists
-            for (int i = 0; i <library.AllItemTypes.Length; i++)
+            for (int i = 0; i < library.AllItemTypes.Length; i++)
             {
                 Assert.That(library.AllItemTypes[i] != type, "item type still exists in library");
             }
@@ -98,35 +98,152 @@ namespace UnitTesting
             }
         }
 
+        ItemLibrary TestLibrary()
+        {
+            return LibraryHandler.LoadLibrary(testFolderPath + "/TestItemLibrary.json");
+        }
+
+
+
         [Test]
         public void TestIfLibraryHandlerCanCalculateRawIngredients()
         {
             // Load Library
             // This Library contains a recipe for apple cake that has 30 flour as one of its ingredients
-            // Flour is made from 100 grain so the raw ingredients should contain 3000 grain and no flour      
+            // '10' 'flour' is made from 100 grain so the raw ingredients should contain 300 grain and no flour      
 
-            ItemLibrary library = LibraryHandler.LoadLibrary(testFolderPath + "/TestItemLibrary.json");
+            ItemLibrary library = TestLibrary();
 
             // Get Item Type Grain
-            ItemType grain =  LibraryHandler.GetItemTypeByName("grain", library);
+            ItemType grain = LibraryHandler.GetItemTypeByName("grain", library);
 
             // Get ItemType Flour
-            ItemType flour =  LibraryHandler.GetItemTypeByName("flour", library);
+            ItemType flour = LibraryHandler.GetItemTypeByName("flour", library);
 
-            foreach (Recipe recipe in library.AllRecipes)
+            // Find Recipe For Apple Cake
+
+            Recipe recipe = LibraryHandler.GetRecipeByName("apple cake", library);
+
+            Inventory rawIngredients = LibraryHandler.GetRawIngredientsOfRecipe(recipe, library);
+            // has not 30 flour
+            Assert.That(!InventoryHandler.HasAmountOfItem(flour, 30, rawIngredients));
+
+            // has raw 300 grain
+            UnityEngine.Debug.Log(InventoryHandler.GetTotalAmountOfItem(grain, rawIngredients));
+            Assert.That(InventoryHandler.HasAmountOfItem(grain, 300, rawIngredients));
+
+
+
+        }
+
+        [Test]
+        public void TestIfCanFindRecipeByName()
+        {
+
+            ItemLibrary library = TestLibrary();
+
+            Assert.IsNotNull(LibraryHandler.GetRecipeByName("apple cake", library));
+        }
+
+
+        [Test]
+        public void TestRecipeMinimalProduction()
+        {
+            // Load Library
+            ItemLibrary library = TestLibrary();
+
+
+            // This Library contains a recipe for orange cake that has 31 flour as one of its ingredients
+            // '10' 'flour' is made from 100 grain so the raw ingredients should contain 400 grain and no flour      
+
+
+
+            // Get Item Type Grain
+            ItemType grain = LibraryHandler.GetItemTypeByName("grain", library);
+
+            // Get ItemType Flour
+            ItemType flour = LibraryHandler.GetItemTypeByName("flour", library);
+
+            Recipe recipe = LibraryHandler.GetRecipeByName("orange cake", library);
+
+            // Check If 31 flour is in the recipe
+            int amountOfFlourInRecipe = InventoryHandler.GetTotalAmountOfItem(flour, recipe.Ingredients);
+            UnityEngine.Debug.Log(amountOfFlourInRecipe);
+            Assert.AreEqual(31, amountOfFlourInRecipe);
+
+
+
+            Inventory rawIngredients = LibraryHandler.GetRawIngredientsOfRecipe(recipe, library);
+
+            // check if flouir is not in the raw ingredients
+            Assert.That(!InventoryHandler.HasAmountOfItem(flour, 31, rawIngredients));
+
+
+            int amountOfGrainInRawIngredients = InventoryHandler.GetTotalAmountOfItem(grain, rawIngredients);
+
+
+            UnityEngine.Debug.Log(amountOfGrainInRawIngredients);
+            Assert.AreEqual(400, amountOfGrainInRawIngredients);
+        }
+
+        [Test]
+        public void TestForMoreComplicatedRawCalculation()
+        {
+            ItemLibrary library = TestLibrary();
+            
+            //
+
+
+                        // Get Item Type Grain
+            ItemType grain = LibraryHandler.GetItemTypeByName("grain", library);
+
+
+            Recipe recipe = LibraryHandler.GetRecipeByName("pear cake", library);
+
+            Inventory rawIngredients = LibraryHandler.GetRawIngredientsOfRecipe(recipe, library);
+
+
+            int amountOfGrainInRawIngredients = InventoryHandler.GetTotalAmountOfItem(grain, rawIngredients);
+            
+            for(int i = 0; i < rawIngredients.Slots.Length; i++)
             {
-                if (recipe.Result.Item.TypeName == "apple cake")
-                {
-                    Inventory rawIngredients =  LibraryHandler.GetRawIngredientsOfRecipe(recipe,library);
-                    Assert.That(!InventoryHandler.HasAmountOfItem(flour, 30, rawIngredients));
-                    UnityEngine.Debug.Log(InventoryHandler.GetAmountOfItem(grain, rawIngredients));
-                    Assert.That(InventoryHandler.HasAmountOfItem(grain, 300, rawIngredients));
-                    break;
-                }
+                ItemAmount itemAmount = rawIngredients.Slots[i];
+                UnityEngine.Debug.Log(itemAmount.Item.TypeName +" "+itemAmount.Amount);
+            }
+
+            UnityEngine.Debug.Log(amountOfGrainInRawIngredients);
+
+            Assert.AreEqual(500, amountOfGrainInRawIngredients);
+        }
+
+
+        [Test]
+        public void TestIfCanCraftFromInventory()
+        {
+            ItemLibrary library = TestWoodWorkLibrary();
+
+            Inventory testInventory = InventoryBuilder.CreateInventory();
+
+            ItemType woodenLog = LibraryHandler.GetItemTypeByName("wooden log", library);
+            ItemType ironOre = LibraryHandler.GetItemTypeByName("iron ore", library);
+
+            ItemType workBench = LibraryHandler.GetItemTypeByName("workbench", library);
+
+            InventoryHandler.AddToInventory(new ItemAmount(woodenLog, 3),testInventory);
+            InventoryHandler.AddToInventory(new ItemAmount(ironOre, 60),testInventory);
+
+            Recipe workBenchRecipe = LibraryHandler.GetRecipeByName(workBench.TypeName,library);
+            foreach(ItemAmount ingredientName in workBenchRecipe.Ingredients.Slots)
+            {
+                UnityEngine.Debug.Log(ingredientName.Item.TypeName+" "+ingredientName.Amount);
             }
             
+            Assert.That(InventoryHandler.CanCraftRaw(workBenchRecipe,testInventory, library));
+        }
 
-
+        private ItemLibrary TestWoodWorkLibrary()
+        {
+            return LibraryHandler.LoadLibrary(testFolderPath + "/Wood Work Test Library.json");
         }
     }
 }

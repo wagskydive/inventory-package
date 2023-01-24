@@ -53,7 +53,7 @@ namespace InventoryPackage
             {
                 if(this.ingredients.Slots[i].Item == itemType)
                 {
-                    this.ingredients.RemoveFromSlot(i);
+                    this.ingredients.RemoveSlot(i);
                 }
             }
         }
@@ -62,6 +62,8 @@ namespace InventoryPackage
         {
             this.result = new ItemAmount(this.result.Item, outputAmount);
         }
+
+
     }
 }
 

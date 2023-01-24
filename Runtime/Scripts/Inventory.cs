@@ -31,10 +31,12 @@ namespace InventoryPackage
             }
         }
 
-        internal void RemoveFromSlot(int i)
+        internal void RemoveSlot(int i)
         {
             Slots[i] = new ItemAmount(ItemType.Empty(),0);
         }
+
+
 
         public string[] GetContentInfo()
         {
@@ -46,6 +48,11 @@ namespace InventoryPackage
             }
             return info;
 
+        }
+
+        internal void RemoveAmountFromSlot(int amount, int slot)
+        {
+            Slots[slot] = new ItemAmount(Slots[slot].Item, Slots[slot].Amount - amount);
         }
 
        

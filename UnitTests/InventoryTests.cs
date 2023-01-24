@@ -8,9 +8,6 @@ namespace UnitTesting
 {
     internal class InventoryTests
     {
-
-
-
         public static string GetCurrentMethodName()
         {
             StackTrace stackTrace = new StackTrace();

@@ -64,30 +64,12 @@
         {
             "name": "pear cake",
             "description": "cake made from pears",
-            "stack size": 10,
-            "recipe": {
-                "ingredients": [
-                    {
-                        "type name": "water",
-                        "quantity": 100
-                    },
-                    {
-                        "type name": "flour",
-                        "quantity": 30
-                    },
-                    {
-                        "type name": "sugar",
-                        "quantity": 10
-                    },
-                    {
-                        "type name": "pear",
-                        "quantity": 10
-                    }
-                ],
-                "tool": "oven",
-                "craft time": 5,
-                "output amount": 1
-            }
+            "stack size": 10
+        },
+        {
+            "name": "special topping",
+            "description": "topping for delicious cakes",
+            "stack size": 100
         }
     ],
     "Recipes": [
@@ -136,7 +118,7 @@
                 },
                 {
                     "type name": "flour",
-                    "quantity": 30
+                    "quantity": 31
                 },
                 {
                     "type name": "sugar",
@@ -150,6 +132,54 @@
             "tool": "oven",
             "craft time": 5,
             "output amount": 1
+        },
+        {
+            "result": "pear cake",
+            "ingredients": [
+                {
+                    "type name": "water",
+                    "quantity": 100
+                },
+                {
+                    "type name": "flour",
+                    "quantity": 30
+                },
+                {
+                    "type name": "sugar",
+                    "quantity": 10
+                },
+                {
+                    "type name": "pear",
+                    "quantity": 10
+                },
+                {
+                    "type name": "special topping",
+                    "quantity": 11
+                }
+            ],
+            "tool": "oven",
+            "craft time": 5,
+            "output amount": 1
+        },
+        {
+            "result": "special topping",
+            "ingredients": [
+                {
+                    "type name": "water",
+                    "quantity": 10
+                },
+                {
+                    "type name": "sugar",
+                    "quantity": 10
+                },
+                {
+                    "type name": "flour",
+                    "quantity": 10 
+                }
+            ],
+            "craft time": 1,
+            "output amount": 10
+
         }
     ]
 }

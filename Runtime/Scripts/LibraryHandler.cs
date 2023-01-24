@@ -157,40 +157,58 @@ namespace InventoryPackage
             library.RemoveItemType(index);
         }
 
-        public static Inventory GetRawIngredientsOfRecipe(Recipe recipe, ItemLibrary library)
+        public static Inventory GetRawIngredientsOfInventory(Inventory inventory, ItemLibrary library)
         {
-            ItemAmount[] recipeResults = RecipeResults(library);
-            string[] recipeResultNames = RecipesResultTypes(library);
-            Inventory finalInventory = InventoryBuilder.CreateInventory(999);
-
-            for (int i = 0; i < recipe.Ingredients.Slots.Length; i++)
+            Inventory finalInventory = InventoryBuilder.CreateInventory();
+            for (int i = 0; i < inventory.Slots.Length; i++)
             {
-                ItemAmount ingredient = new ItemAmount(recipe.Ingredients.Slots[i].Item, recipe.Ingredients.Slots[i].Amount);
-                if (recipeResultNames.Contains(ingredient.Item.TypeName))
+                InventoryHandler.AddToInventory(GetRawIngredientsForItemAmount(inventory.Slots[i], library), finalInventory);
+            }
+            return finalInventory;
+        }
+
+        public static Inventory GetRawIngredientsForItemAmount(ItemAmount itemAmount, ItemLibrary library)
+        {
+            Inventory finalInventory = InventoryBuilder.CreateInventory();
+
+            Inventory intermediates = InventoryBuilder.CreateInventory();
+
+
+
+            if (LibraryHandler.IsRawIngredient(itemAmount.Item, library))
+            {
+                InventoryHandler.AddToInventory(itemAmount, finalInventory);
+            }
+            else
+
+            {
+
+                Recipe parentRecipe = LibraryHandler.GetRecipeByName(itemAmount.Item.TypeName, library);
+                float multiplier = (float)itemAmount.Amount / (float)parentRecipe.Result.Amount;
+                Debug.Log("Multiplier " + parentRecipe.Result.Item.TypeName + " " + multiplier);
+
+                for (int j = 0; j < parentRecipe.Ingredients.Slots.Length; j++)
                 {
-                    for (int j = 0; j < recipeResults.Length; j++)
-                    {
-                        if (recipeResults[j].Item == ingredient.Item)
-                        {
-                            int recipeRuns = (int)Mathf.Ceil(ingredient.Amount / recipeResults[j].Amount);
-
-
-                            for (int k = 0; k < recipeRuns; k++)
-                            {
-                                InventoryHandler.AddToInventory(GetRawIngredientsOfRecipe(library.AllRecipes[j], library), finalInventory);
-                            }
-
-                            break;
-                        }
-                    }
+                    InventoryHandler.AddToInventory(new ItemAmount(parentRecipe.Ingredients.Slots[j].Item, (int)(parentRecipe.Ingredients.Slots[j].Amount * multiplier)), intermediates);
                 }
-                else
+
+                
+                for (int k = 0; k < intermediates.Slots.Length; k++)
                 {
-                    InventoryHandler.AddToInventory(ingredient, finalInventory);
+                    InventoryHandler.AddToInventory(LibraryHandler.GetRawIngredientsForItemAmount(intermediates.Slots[k], library), finalInventory);
+
                 }
+
             }
 
             return finalInventory;
+        }
+
+        public static Inventory GetRawIngredientsOfRecipe(Recipe recipe, ItemLibrary library)
+        {
+
+            return GetRawIngredientsOfInventory(recipe.Ingredients, library);
+
         }
 
         public static bool IsRawIngredient(ItemType itemType, ItemLibrary itemLibrary)
@@ -212,6 +230,20 @@ namespace InventoryPackage
                 if (itemLibrary.AllRecipes[i].Result.Item == itemType)
                 {
                     return itemLibrary.AllRecipes[i];
+                }
+            }
+            return null;
+        }
+
+        public static Recipe GetRecipeByName(string v, ItemLibrary library)
+        {
+
+            foreach (Recipe recipe in library.AllRecipes)
+            {
+                if (recipe.Result.Item.TypeName == v)
+                {
+                    return recipe;
+
                 }
             }
             return null;
