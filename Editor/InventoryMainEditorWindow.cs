@@ -113,9 +113,9 @@ public class InventoryMainEditorWindow : EditorWindow
         if (library == null)
         {
             GUILayout.Label("No Library Loaded");
-            if (GUILayout.Button(new GUIContent("Load inventory json", "select a json library file")))
+            if (GUILayout.Button(new GUIContent("Load library json", "select a json library file")))
             {
-                path = EditorUtility.OpenFilePanel("Select Inventory json", "", "json");
+                path = EditorUtility.OpenFilePanel("Select Library json", "", "json");
                 ResetLibrary(JSONDeserializer.CreateLibraryFromJSON(path));
             }
             GUILayout.Label("Or");
@@ -127,6 +127,19 @@ public class InventoryMainEditorWindow : EditorWindow
                     ResetLibrary(PrefabToLibrary.LibraryFromPrefab(prefab));
                 }
             }
+            GUILayout.Label("Or");
+            if (GUILayout.Button(new GUIContent("Load library from png files in folder", "select a json library file")))
+            {
+                path = EditorUtility.OpenFolderPanel("Select Folder with png files", "", "png");
+
+
+                ItemLibrary newLibrary = PngFinder.CreateItemLibraryFromPngFiles(path);
+                if(newLibrary != null)
+                {
+                    ResetLibrary(newLibrary);
+                }
+            }
+
         }
 
         if (library != null)
@@ -168,8 +181,8 @@ public class InventoryMainEditorWindow : EditorWindow
             {
                 itemTypeEditorWindow = GetWindow<ItemTypeEditorWindow>("Item Type Editor");
                 ItemType newItemType = ItemType.CreateNew("my new item type", 100, "no description written", library.DefaultResourcePath);
-                LibraryHandler.AddItemType(newItemType,library);
-                itemTypeEditorWindow.SetLibraryAndItemType(library,newItemType);
+                LibraryHandler.AddItemType(newItemType, library);
+                itemTypeEditorWindow.SetLibraryAndItemType(library, newItemType);
             }
 
             if (GUILayout.Button(new GUIContent("Remove Item Type", "remove an item type from the library")))
