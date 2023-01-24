@@ -7,6 +7,7 @@ using InventoryPackage;
 using UnityEngine.UIElements;
 using UnityEditor.UIElements;
 using System;
+using System.Linq;
 
 public class InventoryMainEditorWindow : EditorWindow
 {
@@ -134,7 +135,7 @@ public class InventoryMainEditorWindow : EditorWindow
 
 
                 ItemLibrary newLibrary = PngFinder.CreateItemLibraryFromPngFiles(path);
-                if(newLibrary != null)
+                if (newLibrary != null)
                 {
                     ResetLibrary(newLibrary);
                 }
@@ -144,6 +145,36 @@ public class InventoryMainEditorWindow : EditorWindow
 
         if (library != null)
         {
+            if (PngFinder.CheckForNewPngFiles(library) > 0)
+            {
+                if (GUILayout.Button(new GUIContent("update for new png files?")))
+                {
+                    ItemType[] newTypes = PngFinder.GetNewPngFiles(library);
+                    if (newTypes.Any())
+                    {
+                        foreach (ItemType itemType in newTypes)
+                        {
+                            LibraryHandler.AddItemType(itemType, library);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                if (GUILayout.Button(new GUIContent("remove types without png files?")))
+                {
+                    string[] typesWithoutPng = PngFinder.GetItemTypesWithoutPng(library);
+                    if (typesWithoutPng.Any())
+                    {
+                        foreach (string itemTypeString in typesWithoutPng)
+                        {
+                            ItemType itemType = LibraryHandler.GetItemTypeByName(itemTypeString, library);
+                            LibraryHandler.RemoveItemType(itemType, library);
+                        }
+                    }
+                }
+            }
+
             GUILayout.Label("Library " + library.LibraryName + " loaded");
 
             int selected = -1;

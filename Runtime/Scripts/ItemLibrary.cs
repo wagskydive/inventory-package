@@ -25,11 +25,13 @@ namespace InventoryPackage
         public string DefaultResourcePath { get => defaultResourcePath; }
 
 
-        internal ItemLibrary(string libraryName, ItemType[] allItemTypes)
+        internal ItemLibrary(string libraryName, ItemType[] allItemTypes, string resourcePath = "")
         {
             this.libraryName = libraryName;
             this.allItemTypes = allItemTypes;
+            this.defaultResourcePath = resourcePath;
         }
+
 
         internal void ReplaceRecipes(Recipe[] recipes)
         {
@@ -40,7 +42,5 @@ namespace InventoryPackage
         {
             this.defaultResourcePath = resourcePath;
         }
-
-
     }
 }

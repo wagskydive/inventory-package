@@ -19,7 +19,7 @@ public class EditorButtonDrawer : PropertyDrawer
         {
             ReadFileAttribute readFileAttribute = (ReadFileAttribute)attribute;
             
-            property.stringValue = LibraryHandler.LibraryNames(JSONDeserializer.CreateLibraryFromJSON(readFileAttribute.filePath)).ToString();
+            property.stringValue = LibraryHandler.ItemTypeNames(JSONDeserializer.CreateLibraryFromJSON(readFileAttribute.filePath)).ToString();
         }
     }
 

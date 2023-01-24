@@ -24,7 +24,7 @@ namespace InventoryPackage
         public void CreateLibrary()
         {
             library = JSONDeserializer.CreateLibraryFromJSON(libraryPath);
-            libraryNames = LibraryHandler.LibraryNames(library);
+            libraryNames = LibraryHandler.ItemTypeNames(library);
         }
     }
 }

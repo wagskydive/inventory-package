@@ -37,14 +37,14 @@ namespace InventoryPackage
         }
 
 
-        public static string[] LibraryNames(ItemLibrary library)
+        public static string[] ItemTypeNames(ItemLibrary library)
         {
-            List<string> libraryNames = new List<string>();
+            List<string> itemTypeNames = new List<string>();
             foreach (var item in library.AllItemTypes)
             {
-                libraryNames.Add(item.TypeName);
+                itemTypeNames.Add(item.TypeName);
             }
-            return libraryNames.ToArray();
+            return itemTypeNames.ToArray();
 
         }
 
@@ -148,7 +148,17 @@ namespace InventoryPackage
             return new ItemLibrary(libraryName, itemTypes);
         }
 
+        public static void RemoveItemType(ItemType itemType, ItemLibrary library)
+        {
+            for (int i = 0; i < library.allItemTypes.Length; i++)
+            {
+                if (library.AllItemTypes[i] == itemType)
+                {
+                    RemoveItemType(library, i);
+                }
 
+            }
+        }
         public static void RemoveItemType(ItemLibrary library, int index)
         {
             ItemType itemType = library.AllItemTypes[index];
