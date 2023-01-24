@@ -92,7 +92,7 @@ namespace InventoryPackage
             this.icon = icon;
         }
 
-        private void SetResourceFolder(string path)
+        internal void SetResourceFolder(string path)
         {
             resourceFolder = path;
             OnResourceFolderSet?.Invoke(this);
