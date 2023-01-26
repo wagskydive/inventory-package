@@ -7,7 +7,10 @@ namespace InventoryPackage
 {
     public static class LibraryHandler
     {
-
+        public static ItemLibrary CreateNew(string libraryName, ItemType[] itemTypes)
+        {
+            return new ItemLibrary(libraryName, itemTypes);
+        }
 
         public static Inventory MakeCreativeMenu(ItemLibrary library)
         {
@@ -253,6 +256,24 @@ namespace InventoryPackage
                 }
             }
             return null;
+        }
+
+        public static int GetRootDistance(ItemType itemType, ItemLibrary library)
+        {
+            Recipe recipe = LibraryHandler.GetRecipe(itemType, library);
+            if (recipe == null)
+            {
+                return 0;
+            }
+            else
+            {
+                List<int> rootDistances = new List<int>();
+                for (int i = 0; i < recipe.Ingredients.Slots.Length; i++)
+                {
+                    rootDistances.Add(GetRootDistance(recipe.Ingredients.Slots[i].Item, library));
+                }
+                return rootDistances.Max()+1;
+            }
         }
     }
 }
