@@ -29,9 +29,6 @@ namespace UnitTesting
             Recipe recipe1 = RecipeCreator.CreateRecipe(result1, ingredients1);
             LibraryHandler.AddRecipeToLibrary(library, recipe1);
 
-
-
-
             return library;
         }
 
