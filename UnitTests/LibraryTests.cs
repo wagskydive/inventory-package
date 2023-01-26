@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace UnitTesting
 {
+
     internal class LibraryTests
     {
         string testFolderPath = "Assets/inventory-package/UnitTests/TestResources";
@@ -71,11 +72,11 @@ namespace UnitTesting
 
             ItemType type = library.AllItemTypes[indexToRemove];
 
-            LibraryHandler.RemoveItemType(library,indexToRemove);
+            LibraryHandler.RemoveItemType(library, indexToRemove);
 
 
             // assert that itemtype doesnt still exists
-            for (int i = 0; i <library.AllItemTypes.Length; i++)
+            for (int i = 0; i < library.AllItemTypes.Length; i++)
             {
                 Assert.That(library.AllItemTypes[i] != type, "item type still exists in library");
             }
@@ -108,23 +109,23 @@ namespace UnitTesting
             ItemLibrary library = LibraryHandler.LoadLibrary(testFolderPath + "/TestItemLibrary.json");
 
             // Get Item Type Grain
-            ItemType grain =  LibraryHandler.GetItemTypeByName("grain", library);
+            ItemType grain = LibraryHandler.GetItemTypeByName("grain", library);
 
             // Get ItemType Flour
-            ItemType flour =  LibraryHandler.GetItemTypeByName("flour", library);
+            ItemType flour = LibraryHandler.GetItemTypeByName("flour", library);
 
             foreach (Recipe recipe in library.AllRecipes)
             {
                 if (recipe.Result.Item.TypeName == "apple cake")
                 {
-                    Inventory rawIngredients =  LibraryHandler.GetRawIngredientsOfRecipe(recipe,library);
+                    Inventory rawIngredients = LibraryHandler.GetRawIngredientsOfRecipe(recipe, library);
                     Assert.That(!InventoryHandler.HasAmountOfItem(flour, 30, rawIngredients));
                     UnityEngine.Debug.Log(InventoryHandler.GetAmountOfItem(grain, rawIngredients));
                     Assert.That(InventoryHandler.HasAmountOfItem(grain, 300, rawIngredients));
                     break;
                 }
             }
-            
+
 
 
         }
