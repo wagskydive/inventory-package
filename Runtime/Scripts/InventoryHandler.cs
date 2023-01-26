@@ -172,5 +172,22 @@ namespace InventoryPackage
             }
             return amount;
         }
+
+        public static ItemType GetHighestLevelItemInInventory(Inventory inventory, ItemLibrary library)
+        {
+            ItemType highest =  inventory.Slots[0].Item;
+
+            for(int i = 0; i < inventory.Slots.Length; i++)
+            {
+                if(inventory.Slots[i].Item.TypeName != "Empty")
+                {
+                    if(highest.TypeName == "Empty" || LibraryHandler.GetRootDistance(highest, library) < LibraryHandler.GetRootDistance(inventory.Slots[i].Item, library))
+                    {
+                        highest = inventory.Slots[i].Item;
+                    }
+                }
+            }
+            return highest;
+        }
     }
 }
