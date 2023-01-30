@@ -6,11 +6,18 @@ namespace InventoryPackage
 {
     public class ItemInstance : MonoBehaviour
     {
-        public ItemType itemType{get; private set; }
+        private ItemType typeOfItem;
+
+        public ItemType TypeOfItem {get => typeOfItem;}
 
         public void SetItemType(ItemType itemType)
         {
-            this.itemType = itemType;
+            this.typeOfItem = itemType;
+        }
+
+        internal void Use()
+        {
+
         }
     }
 }
