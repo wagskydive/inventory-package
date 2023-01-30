@@ -7,9 +7,9 @@ using InventoryPackage;
 using UnityEngine.UIElements;
 using UnityEditor.UIElements;
 using System;
-
 public class InventoryMainEditorWindow : EditorWindow
 {
+
     string path = "";
 
     GUIContent[] itemTypeGuiContents;
@@ -35,45 +35,8 @@ public class InventoryMainEditorWindow : EditorWindow
         SetEditorIcons(library);
     }
 
-    private GUIContent[] MakeItemTypeButtons(ItemType[] itemTypes)
-    {
-        GUIContent[] buttons = new GUIContent[itemTypes.Length];
 
-        for (int i = 0; i < itemTypes.Length; i++)
-        {
-            GUIContent buttonContent = new GUIContent(itemTypes[i].Icon, itemTypes[i].TypeName);
-            buttons[i] = buttonContent;
-        }
-        return buttons;
-    }
 
-    private GUIContent[] MakeRecipeButtons(Recipe[] recipes)
-    {
-        GUIContent[] buttons = new GUIContent[recipes.Length];
-
-        for (int i = 0; i < recipes.Length; i++)
-        {
-            Recipe recipe = recipes[i];
-            GUIContent buttonContent = new GUIContent(recipes[i].Result.Item.Icon, recipes[i].Result.Item.TypeName + IngredientsString(recipe));
-            buttons[i] = buttonContent;
-        }
-        return buttons;
-    }
-
-    private static string IngredientsString(Recipe recipe)
-    {
-        string recipeString = "";
-        if (recipe.Ingredients != null)
-        {
-            recipeString = "\nIngredients: ";
-            for (int j = 0; j < recipe.Ingredients.Slots.Length; j++)
-            {
-                ItemAmount ingredient = recipe.Ingredients.Slots[j];
-                recipeString = recipeString + "\n      " + ingredient.Item.TypeName + ": " + ingredient.Amount.ToString();
-            }
-        }
-        return recipeString;
-    }
 
     private void SetEditorIcons(ItemLibrary library)
     {
@@ -86,24 +49,6 @@ public class InventoryMainEditorWindow : EditorWindow
             }
         }
     }
-
-    int ItemTypeGrid(ItemType[] items, int columns, int slotSize)
-    {
-        int selected = -1;
-        var height = slotSize * Mathf.CeilToInt(items.Length / (float)columns);
-        selected = GUILayout.SelectionGrid(selected, MakeItemTypeButtons(items), columns, GUILayout.Width(slotSize * columns), GUILayout.Height(height));
-        return selected;
-    }
-
-    int RecipesGrid(Recipe[] recipes, int columns, int slotSize)
-    {
-        int selected = -1;
-        var height = slotSize * Mathf.CeilToInt(recipes.Length / (float)columns);
-        selected = GUILayout.SelectionGrid(selected, MakeRecipeButtons(recipes), columns, GUILayout.Width(slotSize * columns), GUILayout.Height(height));
-        return selected;
-    }
-
-
 
     void OnGUI()
     {
@@ -134,7 +79,7 @@ public class InventoryMainEditorWindow : EditorWindow
 
 
                 ItemLibrary newLibrary = PngFinder.CreateItemLibraryFromPngFiles(path);
-                if(newLibrary != null)
+                if (newLibrary != null)
                 {
                     ResetLibrary(newLibrary);
                 }
@@ -148,7 +93,7 @@ public class InventoryMainEditorWindow : EditorWindow
 
             int selected = -1;
 
-            selected = ItemTypeGrid(library.AllItemTypes, 7, 64);
+            selected = EditorObjects.ItemTypeGrid(library.AllItemTypes, 7, 64);
 
             if (selected != -1)
             {
@@ -195,7 +140,7 @@ public class InventoryMainEditorWindow : EditorWindow
             GUILayout.Label("Recipes");
             if (library.AllRecipes != null)
             {
-                int recipeSelection = RecipesGrid(library.AllRecipes, 7, 64);
+                int recipeSelection = EditorObjects.RecipesGrid(library.AllRecipes, 7, 64);
                 if (recipeSelection != -1)
                 {
                     recipeEditorWindow = GetWindow<RecipeEditorWindow>("Recipe Editor");
@@ -204,6 +149,11 @@ public class InventoryMainEditorWindow : EditorWindow
                 }
             }
             AddRecipeButton();
+
+            if (GUILayout.Button(new GUIContent("Crafting Tester", "open the crafting tester")))
+            {
+                GetWindow<CraftTestEditorWindow>().SetLibrary(library);
+            }
             GUILayout.BeginHorizontal();
             if (GUILayout.Button(new GUIContent("Save Library", "Save Changes"), GUILayout.Width(100)))
             {
