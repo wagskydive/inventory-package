@@ -23,7 +23,7 @@ namespace InventoryPackage
             }
         }
 
-        private static bool CanCraft(Recipe recipe, Inventory input, Inventory output, ItemInstance tool)
+        public static bool CanCraft(Recipe recipe, Inventory input, Inventory output, ItemInstance tool)
         {
             if(recipe.ToolType != null &&  recipe.ToolType != tool.TypeOfItem)
             {
