@@ -5,7 +5,6 @@ namespace UnitTesting
 {
     internal class CraftingTests
     {
-        string testFolderPath = "Assets/inventory-package/UnitTests/TestResources";
         ItemLibrary ThreeRootLevelLibrary()
         {
             ItemType[] itemTypes = new ItemType[3];
@@ -84,20 +83,45 @@ namespace UnitTesting
         }
 
         [Test]
-        public void TesGetHighestLevelInInventory()
+        public void TestGetHighestLevelInInventory()
         {
             ItemLibrary library = UnSortedLLibrary();
 
             Inventory inventory = InventoryBuilder.CreateInventory(library.AllItemTypes.Length);
-            for(int i = 0; i < library.AllItemTypes.Length; i++)
+            for (int i = 0; i < library.AllItemTypes.Length; i++)
             {
-                InventoryHandler.AddToInventory(new ItemAmount(library.AllItemTypes[i],1),inventory);
+                InventoryHandler.AddToInventory(new ItemAmount(library.AllItemTypes[i], 1), inventory);
             }
-            
+
 
             ItemType itemType = InventoryHandler.GetHighestLevelItemInInventory(inventory, library);
 
             Assert.That(itemType.TypeName == "level 2 type");
+        }
+
+        [Test]
+        public void TestCraftingFunction()
+        {
+            ItemLibrary library = ThreeRootLevelLibrary();
+
+            Inventory input = InventoryBuilder.CreateInventory(10);
+            Inventory output = InventoryBuilder.CreateInventory(10);
+
+            Recipe recipe = library.AllRecipes[0];
+
+
+            for (int i = 0; i < recipe.Ingredients.Slots.Length; i++)
+            {
+                ItemAmount slot = recipe.Ingredients.Slots[i];
+                InventoryHandler.AddToInventory(new ItemAmount(slot.Item, slot.Amount), input);
+            }
+
+            Assert.That( Crafter.CraftNow(recipe, input, output));
+
+            Assert.That(InventoryHandler.HasAmountOfItem(recipe.Result.Item,recipe.Result.Amount,output));
+
+
+
         }
 
 
