@@ -12,7 +12,7 @@ namespace UnitTesting
             string testName = "test name";
             Character character = new Character(testName);
 
-            Assert.AreEqual(testName,character.CharacterName);
+            Assert.That(testName == character.CharacterName);
         }
 
 
