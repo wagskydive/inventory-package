@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,25 +6,25 @@ namespace InventoryPackage
 {
     public static class InventoryHandler
     {
-        public static void AddToInventory(ItemAmount amountLeft, Inventory inventory)
+        public static void AddToInventory(ItemAmount itemAmountToAdd, Inventory inventory)
         {
-            if (HasSlotWithItemWithSpace(amountLeft.Item, inventory))
+            if (HasSlotWithItemWithSpace(itemAmountToAdd.Item, inventory))
             {
-                int[] slotsWithItemType = GetSlotsWithItemType(amountLeft.Item, inventory);
+                int[] slotsWithItemType = GetSlotsWithItemType(itemAmountToAdd.Item, inventory);
 
                 for (int i = 0; i < slotsWithItemType.Length; i++)
                 {
 
-                    inventory.Slots[slotsWithItemType[i]].AddAmount(amountLeft.Amount, out amountLeft);
-                    if (amountLeft.Item.TypeName == ItemType.Empty().TypeName)
+                    inventory.Slots[slotsWithItemType[i]].AddAmount(itemAmountToAdd.Amount, out itemAmountToAdd);
+                    if (itemAmountToAdd.Item.TypeName == ItemType.Empty().TypeName)
                     {
                         break;
                     }
                     else
                     {
-                        if(HasEmptySlot(inventory))
+                        if (HasEmptySlot(inventory))
                         {
-                            inventory.AddInEmptySlot(amountLeft, GetNextEmptySlot(inventory));
+                            inventory.AddInEmptySlot(itemAmountToAdd, GetNextEmptySlot(inventory));
                         }
                     }
                 }
@@ -33,19 +33,19 @@ namespace InventoryPackage
             {
                 if (HasEmptySlot(inventory))
                 {
-                    inventory.AddInEmptySlot(amountLeft, GetNextEmptySlot(inventory));
+                    inventory.AddInEmptySlot(itemAmountToAdd, GetNextEmptySlot(inventory));
                 }
             }
         }
 
         private static bool HasSlotWithItemWithSpace(ItemType item, Inventory inventory)
         {
-            for(int i = 0; i < inventory.Slots.Length; i++) 
+            for (int i = 0; i < inventory.Slots.Length; i++)
             {
-                if(inventory.Slots[i].Item == item && inventory.Slots[i].Amount < item.StackSize)
+                if (inventory.Slots[i].Item == item && inventory.Slots[i].Amount < item.StackSize)
                 {
                     return true;
-                }   
+                }
             }
             return false;
         }
@@ -91,7 +91,7 @@ namespace InventoryPackage
         public static void PickSlotFromInventory(int slotIndex, Inventory inventory, out ItemAmount picked)
         {
             picked = new ItemAmount(inventory.Slots[slotIndex].Item, inventory.Slots[slotIndex].Amount);
-            inventory.RemoveFromSlot(slotIndex);
+            inventory.TakeSlot(slotIndex);
 
         }
 
@@ -126,11 +126,29 @@ namespace InventoryPackage
         }
 
 
-        public static void RemoveFromInventory(ItemAmount itemAmount, Inventory inventory)
+        public static bool RemoveFromInventory(ItemAmount itemAmount, Inventory inventory)
         {
-            if (GetTotalAmountOfItem(itemAmount.Item, inventory) >= itemAmount.Amount)
+            if (HasAmountOfItem(itemAmount.Item, itemAmount.Amount, inventory))
             {
-
+                ItemAmount amountLeft;
+                int[] slotsWithItem = GetSlotsWithItemType(itemAmount.Item, inventory);
+                for (int i = 0; i < slotsWithItem.Length; i++)
+                {
+                    inventory.Slots[i].RemoveAmount(itemAmount.Amount, out amountLeft);
+                    if (inventory.Slots[i].Amount == 0)
+                    {
+                        inventory.RemoveSlot(i);
+                    }
+                    if (amountLeft == null || amountLeft.Amount <= 0)
+                    {
+                        break;
+                    }
+                }
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
 
@@ -171,6 +189,23 @@ namespace InventoryPackage
                 }
             }
             return amount;
+        }
+
+        public static ItemType GetHighestLevelItemInInventory(Inventory inventory, ItemLibrary library)
+        {
+            ItemType highest = inventory.Slots[0].Item;
+
+            for (int i = 0; i < inventory.Slots.Length; i++)
+            {
+                if (inventory.Slots[i].Item.TypeName != "Empty")
+                {
+                    if (highest.TypeName == "Empty" || LibraryHandler.GetRootDistance(highest, library) < LibraryHandler.GetRootDistance(inventory.Slots[i].Item, library))
+                    {
+                        highest = inventory.Slots[i].Item;
+                    }
+                }
+            }
+            return highest;
         }
     }
 }

@@ -14,7 +14,14 @@ namespace InventoryPackage
         private static int GetDefaultCharacterInventorySize()
         {
             TextAsset asset = Resources.Load("inventory-package-configuration.json") as TextAsset;
-            return JSONDeserializer.ReadJsonConfigDefaultCharacterInventorySize(JSONDeserializer.ReadJSON(asset.text));
+            if(asset != null)
+            {
+                return JSONDeserializer.ReadJsonConfigDefaultCharacterInventorySize(JSONDeserializer.ReadJSON(asset.text));
+            }
+            else{
+                return 20;
+            }
+            
         }
 
         private static string GetLibraryKeyWord()

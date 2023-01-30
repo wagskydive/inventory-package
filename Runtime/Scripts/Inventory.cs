@@ -35,9 +35,16 @@ namespace InventoryPackage
             }
         }
 
-        internal void RemoveFromSlot(int i)
+        internal ItemAmount TakeSlot(int i)
         {
-            Slots[i] = new ItemAmount(ItemType.Empty(),0);
+            if(Slots[i].Item.TypeName != ItemType.Empty().TypeName)
+            {
+                ItemAmount slot = Slots[i];
+                Slots[i] = new ItemAmount(ItemType.Empty(),0);
+                return slot;
+            }
+            return Slots[i];
+            
         }
 
         public string[] GetContentInfo()
@@ -58,6 +65,7 @@ namespace InventoryPackage
             slots.RemoveAt(i);
             Slots = slots.ToArray();
         }
+
     }
 
 
