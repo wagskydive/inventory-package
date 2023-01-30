@@ -3,10 +3,25 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace InventoryPackage
-{ 
+{
     public class Inventory
     {
-        public ItemAmount[] Slots{get; private set;}
+        public ItemAmount[] Slots { get; private set; }
+
+        public ItemAmount[] NonEmptySlots { get => GetNonEmptySlots(); }
+
+        private ItemAmount[] GetNonEmptySlots()
+        {
+            List<ItemAmount> items = new List<ItemAmount>();
+            for (int i = 0; i < Slots.Length; i++)
+            {
+                if (Slots[i].Item.TypeName != "Empty")
+                {
+                    items.Add(Slots[i]);
+                }
+            }
+            return items.ToArray();
+        }
 
         internal Inventory(int availableSlots = 100)
         {
@@ -20,16 +35,16 @@ namespace InventoryPackage
             {
                 if (Slots[i] == null)
                 {
-                    Slots[i] = new ItemAmount(ItemType.Empty(),0);
+                    Slots[i] = new ItemAmount(ItemType.Empty(), 0);
                 }
             }
         }
 
 
 
-        internal void AddInEmptySlot(ItemAmount itemAmount, int slotIndex) 
+        internal void AddInEmptySlot(ItemAmount itemAmount, int slotIndex)
         {
-            if(Slots[slotIndex].Item.TypeName == ItemType.Empty().TypeName)
+            if (Slots[slotIndex].Item.TypeName == ItemType.Empty().TypeName)
             {
                 Slots[slotIndex] = itemAmount;
             }
@@ -37,14 +52,14 @@ namespace InventoryPackage
 
         internal ItemAmount TakeSlot(int i)
         {
-            if(Slots[i].Item.TypeName != ItemType.Empty().TypeName)
+            if (Slots[i].Item.TypeName != ItemType.Empty().TypeName)
             {
                 ItemAmount slot = Slots[i];
-                Slots[i] = new ItemAmount(ItemType.Empty(),0);
+                Slots[i] = new ItemAmount(ItemType.Empty(), 0);
                 return slot;
             }
             return Slots[i];
-            
+
         }
 
         public string[] GetContentInfo()
@@ -52,7 +67,7 @@ namespace InventoryPackage
             string[] info = new string[Slots.Length];
             for (int i = 0; i < info.Length; i++)
             {
-                string itemAmountInfo = Slots[i].Item.TypeName+ " "+Slots[i].Amount;
+                string itemAmountInfo = Slots[i].Item.TypeName + " " + Slots[i].Amount;
                 info[i] = itemAmountInfo;
             }
             return info;
