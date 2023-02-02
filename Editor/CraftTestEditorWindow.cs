@@ -8,7 +8,7 @@ public class CraftTestEditorWindow : EditorWindow
     ItemLibrary library;
     Inventory input;
     Inventory output;
-    ItemInstance tool;
+    IItemInstance tool;
     Recipe recipe;
 
 
@@ -105,6 +105,18 @@ public class CraftTestEditorWindow : EditorWindow
 
         }
 
+        if (GUILayout.Button(new GUIContent("add tool", "click here to create an item instance to test as a tool")))
+        {
+            itemSelectionWindow = GetWindow<ItemSelectionEditorWindow>();
+
+
+            itemSelectionWindow.SetItems(library.AllItemTypes);
+            itemSelectionWindow.OnSelection += ToolSelection;
+        }
+        if (tool != null)
+        {
+            EditorGUILayout.ObjectField(tool.TypeOfItem.Icon, typeof(Texture2D), false, GUILayout.Width(150), GUILayout.Height(150));
+        }
 
         if (output == null)
         {
@@ -114,6 +126,15 @@ public class CraftTestEditorWindow : EditorWindow
         {
             EditorObjects.ItemAmountGrid(output.NonEmptySlots, 5, 60);
         }
+
+
+
+    }
+
+    private void ToolSelection(int selection)
+    {
+        TestItemInstance testItemInstance = new TestItemInstance(library.AllItemTypes[selection]);
+        this.tool = testItemInstance;
     }
 
     private void HandleRecipeSelection(int selection)

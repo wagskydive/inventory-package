@@ -4,18 +4,19 @@ using UnityEngine;
 
 namespace InventoryPackage
 {
-    public class ItemInstance : MonoBehaviour
+
+    public class ItemInstance : MonoBehaviour, IItemInstance
     {
         private ItemType typeOfItem;
 
-        public ItemType TypeOfItem {get => typeOfItem;}
+        public ItemType TypeOfItem { get => typeOfItem; }
 
         public void SetItemType(ItemType itemType)
         {
             this.typeOfItem = itemType;
         }
 
-        internal void Use()
+        public void Use()
         {
 
         }
