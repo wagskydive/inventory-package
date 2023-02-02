@@ -4,7 +4,7 @@ namespace InventoryPackage
 {
     public static class Crafter
     {
-        public static bool CraftNow(Recipe recipe, Inventory input, Inventory output, ItemInstance tool = null)
+        public static bool CraftNow(Recipe recipe, Inventory input, Inventory output, IItemInstance tool = null)
         {
             if (CanCraft(recipe, input, output, tool))
             {
@@ -23,7 +23,7 @@ namespace InventoryPackage
             }
         }
 
-        public static bool CanCraft(Recipe recipe, Inventory input, Inventory output, ItemInstance tool)
+        public static bool CanCraft(Recipe recipe, Inventory input, Inventory output, IItemInstance tool)
         {
             if(recipe.ToolType != null && recipe.ToolType.TypeName != "Empty")
             {
