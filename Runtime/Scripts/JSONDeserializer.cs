@@ -48,7 +48,7 @@ namespace InventoryPackage
         {
             JSONObject library = JSONObject.Parse(ReadJSON(path)).AsObject;
             string defaultResourcePath = library["default resource path"];
-            if(defaultResourcePath != null)
+            if (defaultResourcePath != null)
             {
                 return defaultResourcePath;
             }
@@ -88,17 +88,17 @@ namespace InventoryPackage
             string defaultResourcePath = ReadDefaultResourcePath(path);
             ItemType[] itemTypes = ReadAllItemTypes(path);
 
-            foreach(ItemType itemType in itemTypes)
+            foreach (ItemType itemType in itemTypes)
             {
-                if(itemType.ResourceFolderPath == null || itemType.ResourceFolderPath == "")
+                if (itemType.ResourceFolderPath == null || itemType.ResourceFolderPath == "")
                 {
                     ItemType.SetResourcePath(itemType, defaultResourcePath);
                 }
             }
             ItemLibrary library = new ItemLibrary(libraryName, itemTypes);
-            LibraryHandler.SetResourcePath(defaultResourcePath,library);
+            LibraryHandler.SetResourcePath(defaultResourcePath, library);
 
-            
+
             Recipe[] allRecipes = ReadAllRecipes(path, library);
 
             library.ReplaceRecipes(allRecipes);
@@ -160,6 +160,12 @@ namespace InventoryPackage
             return recipes.ToArray();
         }
 
+        public static string LoaderPath()
+        {
+            string jsonString = ReadJSON("Assets/loader.json");
+            JSONObject json = JSONObject.Parse(jsonString).AsObject;
+            return json["CurrentLibrary"];
+        }
     }
 }
 

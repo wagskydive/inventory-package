@@ -10,7 +10,7 @@ namespace InventoryPackage
         {
             JSONObject json = new JSONObject();
             json.Add("LibraryName", library.LibraryName);
-            json.Add("default resource path",library.DefaultResourcePath);
+            json.Add("default resource path", library.DefaultResourcePath);
 
             if (library.AllItemTypes != null)
             {
@@ -24,6 +24,16 @@ namespace InventoryPackage
 
             return json;
         }
+
+        public static JSONObject JSONForLoader(string path)
+        {
+            JSONObject json = new JSONObject();
+            json.Add("CurrentLibrary", path);
+
+
+            return json;
+        }
+
 
         private static JSONArray JSONArrayFromRecipes(Recipe[] recipes)
         {
@@ -52,11 +62,11 @@ namespace InventoryPackage
             json.Add("name", itemType.TypeName);
             json.Add("stack size", itemType.StackSize);
             json.Add("description", itemType.Description);
-            if(itemType.ResourceFolderPath != null && itemType.ResourceFolderPath != "")
+            if (itemType.ResourceFolderPath != null && itemType.ResourceFolderPath != "")
             {
-                 json.Add("resource path", itemType.ResourceFolderPath);
+                json.Add("resource path", itemType.ResourceFolderPath);
             }
-           
+
 
             return json;
         }
@@ -94,7 +104,11 @@ namespace InventoryPackage
             string jsonString = JSONFromLibrary(library).ToString();
             File.WriteAllText(path, jsonString);
         }
-
+        public static void SaveLoaderFile(string pathInFile)
+        {
+            string jsonString = JSONForLoader(pathInFile).ToString();
+            File.WriteAllText("Assets/loader.json", jsonString);
+        }
 
     }
 }
