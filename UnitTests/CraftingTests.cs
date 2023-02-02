@@ -109,19 +109,13 @@ namespace UnitTesting
 
             Recipe recipe = library.AllRecipes[0];
 
-
             for (int i = 0; i < recipe.Ingredients.Slots.Length; i++)
             {
                 ItemAmount slot = recipe.Ingredients.Slots[i];
                 InventoryHandler.AddToInventory(new ItemAmount(slot.Item, slot.Amount), input);
             }
-
-            Assert.That( Crafter.CraftNow(recipe, input, output));
-
-            Assert.That(InventoryHandler.HasAmountOfItem(recipe.Result.Item,recipe.Result.Amount,output));
-
-
-
+            Assert.That(Crafter.CraftNow(recipe, input, output));
+            Assert.That(InventoryHandler.HasAmountOfItem(recipe.Result.Item, recipe.Result.Amount, output));
         }
 
 
