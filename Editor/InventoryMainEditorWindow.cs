@@ -54,15 +54,24 @@ public class InventoryMainEditorWindow : EditorWindow
     {
         minSize = new Vector2(150, 150);
         GUILayout.BeginVertical();
+        if (GUILayout.Button(new GUIContent("Load library json", "select a json library file")))
+        {
+            path = EditorUtility.OpenFilePanel("Select Library json", "", "json");
+            ResetLibrary(JSONDeserializer.CreateLibraryFromJSON(path));
+            JSONSerializer.SaveLoaderFile(path);
+        }
 
         if (library == null)
         {
-            GUILayout.Label("No Library Loaded");
-            if (GUILayout.Button(new GUIContent("Load library json", "select a json library file")))
+            string loaderPath = JSONDeserializer.LoaderPath();
+
+            if (loaderPath != "")
             {
-                path = EditorUtility.OpenFilePanel("Select Library json", "", "json");
-                ResetLibrary(JSONDeserializer.CreateLibraryFromJSON(path));
+                ResetLibrary(JSONDeserializer.CreateLibraryFromJSON(loaderPath));
             }
+
+            GUILayout.Label("No Library Loaded");
+
             GUILayout.Label("Or");
             prefab = (GameObject)EditorGUILayout.ObjectField("Prefab", prefab, typeof(GameObject), false);
             if (prefab != null && GUILayout.Button(new GUIContent("Read Library From Prefab", " Read library data from prefab file")))
@@ -86,6 +95,7 @@ public class InventoryMainEditorWindow : EditorWindow
             }
 
         }
+
 
         if (library != null)
         {
