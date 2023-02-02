@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEditor;
 using InventoryPackage;
+using System;
 
 public class CraftTestEditorWindow : EditorWindow
 {
@@ -62,6 +63,9 @@ public class CraftTestEditorWindow : EditorWindow
 
     void OnGUI()
     {
+
+        // INPUT
+        GUILayout.Label("Input Inventory");
         if (input == null)
         {
             if (GUILayout.Button(new GUIContent("Create test inventory", "click here to create a test inventory")))
@@ -71,29 +75,60 @@ public class CraftTestEditorWindow : EditorWindow
         }
         else
         {
-            AddItemButton(input,library);
-            EditorObjects.ItemAmountGrid(input.NonEmptySlots, 5,60);
-            
-        }
-
-        if (output == null)
-        {
+            AddItemButton(input, library);
+            EditorObjects.ItemAmountGrid(input.NonEmptySlots, 5, 60);
 
         }
 
-        if (recipe == null)
-        {
 
-        }
-        else
+
+
+        if (GUILayout.Button(new GUIContent("Select recipe", "click here to select a recipe")))
         {
+            itemSelectionWindow = GetWindow<ItemSelectionEditorWindow>();
+            itemSelectionWindow.SetItems(LibraryHandler.RecipeResultTypes(library));
+            itemSelectionWindow.OnSelection += HandleRecipeSelection;
+        }
+
+        if (recipe != null)
+        {
+            GUILayout.Label("Recipe");
+            EditorObjects.RecipeSummery(recipe);
             if (Crafter.CanCraft(recipe, input, output, tool))
             {
-                if (GUILayout.Button("Craft", "click here to execute the test craft"))
+                if (GUILayout.Button(new GUIContent("Craft", "click here to execute the test craft")))
                 {
                     Crafter.CraftNow(recipe, input, output, tool);
                 }
+                
             }
+            else
+            {
+                GUILayout.Label("Can not craft, missing ingredients or tool");
+            }
+
         }
+
+
+        if (output == null)
+        {
+            SetOutput(InventoryBuilder.CreateInventory(100));
+        }
+        else
+        {
+            EditorObjects.ItemAmountGrid(output.NonEmptySlots, 5, 60);
+        }
+
+
+
+
+
+    }
+
+    private void HandleRecipeSelection(int selection)
+    {
+        SetRecipe(library.AllRecipes[selection]);
+        itemSelectionWindow.OnSelection -= HandleRecipeSelection;
+
     }
 }
