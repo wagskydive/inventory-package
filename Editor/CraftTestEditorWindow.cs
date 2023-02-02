@@ -77,11 +77,7 @@ public class CraftTestEditorWindow : EditorWindow
         {
             AddItemButton(input, library);
             EditorObjects.ItemAmountGrid(input.NonEmptySlots, 5, 60);
-
         }
-
-
-
 
         if (GUILayout.Button(new GUIContent("Select recipe", "click here to select a recipe")))
         {
@@ -100,7 +96,7 @@ public class CraftTestEditorWindow : EditorWindow
                 {
                     Crafter.CraftNow(recipe, input, output, tool);
                 }
-                
+
             }
             else
             {
@@ -118,17 +114,11 @@ public class CraftTestEditorWindow : EditorWindow
         {
             EditorObjects.ItemAmountGrid(output.NonEmptySlots, 5, 60);
         }
-
-
-
-
-
     }
 
     private void HandleRecipeSelection(int selection)
     {
         SetRecipe(library.AllRecipes[selection]);
         itemSelectionWindow.OnSelection -= HandleRecipeSelection;
-
     }
 }
