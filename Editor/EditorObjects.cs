@@ -87,4 +87,20 @@ public static class EditorObjects
         GUILayout.Label("Inventory");
         return inventory.NonEmptySlots[ItemAmountGrid(inventory.NonEmptySlots, columns, slotSize)];
     }
+
+    public static void RecipeSummery(Recipe recipe)
+    {
+        GUILayout.Label(recipe.ResultType);
+        GUILayout.Label("Ingredients:");
+        for (int i =0; i < recipe.Ingredients.Slots.Length; i++)
+        {
+            ItemAmount slot  = recipe.Ingredients.Slots[i];
+            GUILayout.Label(slot.Amount.ToString()+" "+slot.Item.TypeName);
+        }
+        if(recipe.ToolType != null && recipe.ToolType.TypeName != "Empty")
+        {
+            GUILayout.Label("Tool:");
+            GUILayout.Label(recipe.ToolType.TypeName);
+        }
+    }
 }
