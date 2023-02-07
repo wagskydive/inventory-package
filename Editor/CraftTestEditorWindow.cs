@@ -10,11 +10,10 @@ public class CraftTestEditorWindow : EditorWindow
     Inventory output;
     IItemInstance tool;
     Recipe recipe;
-    ItemAmount selectedItemAmount;
 
-
+    ItemType itemTypeToAddToInput;
     ItemSelectionEditorWindow itemSelectionWindow;
-    AmountWindow amountWindow;
+    AmountEditorWindow amountWindow;
 
 
     public void SetInput(Inventory input)
@@ -42,15 +41,12 @@ public class CraftTestEditorWindow : EditorWindow
         this.library = library;
     }
 
-
     private void AddItemButton(Inventory inventory, ItemLibrary itemLibrary)
     {
         GUIContent content = EditorGUIUtility.IconContent("CreateAddNew@2x");
         if (GUILayout.Button(content, GUILayout.Width(32), GUILayout.Height(32)))
         {
             itemSelectionWindow = GetWindow<ItemSelectionEditorWindow>();
-
-
             itemSelectionWindow.SetItems(itemLibrary.AllItemTypes);
             itemSelectionWindow.OnSelection += AddItemRequest;
         }
@@ -58,14 +54,21 @@ public class CraftTestEditorWindow : EditorWindow
 
     private void AddItemRequest(int itemIndex)
     {
-        InventoryHandler.AddToInventory(new ItemAmount(library.AllItemTypes[itemIndex], 1), input);
+        itemSelectionWindow.OnSelection -= AddItemRequest;
+        itemTypeToAddToInput = library.AllItemTypes[itemIndex];
+        amountWindow = GetWindow<AmountEditorWindow>();
+        amountWindow.SetAmount(1);
+        amountWindow.OnConfirm += SetAmountToAdd;
     }
 
-
+    private void SetAmountToAdd(int amount)
+    {
+        InventoryHandler.AddToInventory(new ItemAmount(itemTypeToAddToInput, amount), input);
+        amountWindow.OnConfirm -= SetAmountToAdd;
+    }
 
     void OnGUI()
     {
-
         // INPUT
         GUILayout.Label("Input Inventory");
         if (input == null)
@@ -79,16 +82,7 @@ public class CraftTestEditorWindow : EditorWindow
         {
             AddItemButton(input, library);
 
-            int itemAmounSelection = EditorObjects.ItemAmountGrid(input.NonEmptySlots, 5, 60);
-            if (itemAmounSelection != -1)
-            {
-                selectedItemAmount = input.NonEmptySlots[itemAmounSelection];
-                amountWindow = GetWindow<AmountWindow>();
-                amountWindow.SetAmount(selectedItemAmount.Amount);
-
-                amountWindow.OnConfirm += HandleAmountOfInputInventoryItem;
-                amountWindow.OnClose += UnsubscribeAmountWindow;
-            }
+            EditorObjects.ItemAmountGrid(input.NonEmptySlots, 5, 60);
 
         }
 
@@ -139,31 +133,6 @@ public class CraftTestEditorWindow : EditorWindow
         {
             EditorObjects.ItemAmountGrid(output.NonEmptySlots, 5, 60);
         }
-
-
-
-    }
-
-    private void HandleAmountOfInputInventoryItem(int obj)
-    {
-        if (obj > selectedItemAmount.Amount)
-        {
-            int rest = obj - selectedItemAmount.Amount;
-            InventoryHandler.AddToInventory(new ItemAmount(selectedItemAmount.Item, rest), input);
-        }
-        else if(obj < selectedItemAmount.Amount)
-        {
-            int diffrence  = selectedItemAmount.Amount - obj;
-            InventoryHandler.RemoveFromInventory(new ItemAmount(selectedItemAmount.Item, diffrence), input);
-        }
-
-    }
-
-    private void UnsubscribeAmountWindow()
-    {
-        amountWindow.OnConfirm -= selectedItemAmount.SetAmount;
-        amountWindow.OnClose -= UnsubscribeAmountWindow;
-
     }
 
     private void ToolSelection(int selection)
