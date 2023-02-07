@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEditor;
 using System;
 
-public class AmountWindow : EditorWindow
+public class AmountEditorWindow : EditorWindow
 {
     public event Action<int> OnConfirm;
     public event Action OnClose;
