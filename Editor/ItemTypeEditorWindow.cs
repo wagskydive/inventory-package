@@ -29,6 +29,10 @@ public class ItemTypeEditorWindow : EditorWindow
         GUILayout.Label("Description:");
         ItemType.SetDescription(itemType, GUILayout.TextField(itemType.Description));
         GUILayout.Space(20);
+        
+        GUILayout.Label("Stack Size:");
+        ItemType.SetStackSize(itemType, EditorGUILayout.IntField(itemType.StackSize));
+        GUILayout.Space(20);
 
         GUILayout.Label("Resource Path:");
         ItemType.SetResourcePath(itemType, GUILayout.TextField(itemType.ResourceFolderPath));
