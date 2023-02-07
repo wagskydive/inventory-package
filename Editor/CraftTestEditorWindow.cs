@@ -10,9 +10,11 @@ public class CraftTestEditorWindow : EditorWindow
     Inventory output;
     IItemInstance tool;
     Recipe recipe;
+    ItemAmount selectedItemAmount;
 
 
     ItemSelectionEditorWindow itemSelectionWindow;
+    AmountWindow amountWindow;
 
 
     public void SetInput(Inventory input)
@@ -76,7 +78,18 @@ public class CraftTestEditorWindow : EditorWindow
         else
         {
             AddItemButton(input, library);
-            EditorObjects.ItemAmountGrid(input.NonEmptySlots, 5, 60);
+
+            int itemAmounSelection = EditorObjects.ItemAmountGrid(input.NonEmptySlots, 5, 60);
+            if (itemAmounSelection != -1)
+            {
+                selectedItemAmount = input.NonEmptySlots[itemAmounSelection];
+                amountWindow = GetWindow<AmountWindow>();
+                amountWindow.SetAmount(selectedItemAmount.Amount);
+
+                amountWindow.OnConfirm += HandleAmountOfInputInventoryItem;
+                amountWindow.OnClose += UnsubscribeAmountWindow;
+            }
+
         }
 
         if (GUILayout.Button(new GUIContent("Select recipe", "click here to select a recipe")))
@@ -128,6 +141,28 @@ public class CraftTestEditorWindow : EditorWindow
         }
 
 
+
+    }
+
+    private void HandleAmountOfInputInventoryItem(int obj)
+    {
+        if (obj > selectedItemAmount.Amount)
+        {
+            int rest = obj - selectedItemAmount.Amount;
+            InventoryHandler.AddToInventory(new ItemAmount(selectedItemAmount.Item, rest), input);
+        }
+        else if(obj < selectedItemAmount.Amount)
+        {
+            int diffrence  = selectedItemAmount.Amount - obj;
+            InventoryHandler.RemoveFromInventory(new ItemAmount(selectedItemAmount.Item, diffrence), input);
+        }
+
+    }
+
+    private void UnsubscribeAmountWindow()
+    {
+        amountWindow.OnConfirm -= selectedItemAmount.SetAmount;
+        amountWindow.OnClose -= UnsubscribeAmountWindow;
 
     }
 
